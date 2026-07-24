@@ -1,4 +1,4 @@
-# lsp-integration-samples
+# LSP Integration tests samples
 
 Sample projects used for **LSP performance and integration testing** in IntelliJ IDEA.
 
