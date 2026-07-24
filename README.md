@@ -1,0 +1,20 @@
+# lsp-integration-samples
+
+Sample projects used for **LSP performance and integration testing** in IntelliJ IDEA.
+
+Each subdirectory is a small, self-contained project in a specific language. The
+tests open these projects to exercise LSP Client integration
+— diagnostics, completion, navigation — and to measure
+performance on realistic-but-minimal codebases.
+
+## Layout
+
+Each sample lives in its own top-level directory named after the language:
+
+```
+lsp-integration-samples/
+├── swift/      # Swift sample project
+├── lua/        # Lua sample project
+├── dart/       # Dart sample project
+└── ...
+```
