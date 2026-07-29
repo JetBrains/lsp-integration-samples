@@ -24,3 +24,4 @@ lsp-integration-samples/
 | Language | Project | Source |
 |----------|---------|--------|
 | Lua | `lua/inspect.lua` | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
+| Dart | `dart/equatable` | [felangel/equatable](https://github.com/felangel/equatable) |
