@@ -18,3 +18,9 @@ lsp-integration-samples/
 ├── dart/       # Dart sample project
 └── ...
 ```
+
+## Projects
+
+| Language | Project | Source |
+|----------|---------|--------|
+| Lua | `lua/inspect.lua` | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
