@@ -25,3 +25,4 @@ lsp-integration-samples/
 |----------|---------|--------|
 | Lua | `lua/inspect.lua` | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
 | Dart | `dart/equatable` | [felangel/equatable](https://github.com/felangel/equatable) |
+| Swift | `swift/swift-tagged` | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
