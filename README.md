@@ -21,8 +21,9 @@ lsp-integration-samples/
 
 ## Projects
 
-| Language | Project | Source |
-|----------|---------|--------|
-| Lua | `lua/inspect.lua` | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
-| Dart | `dart/equatable` | [felangel/equatable](https://github.com/felangel/equatable) |
+| Language | Project              | Source                                                                  |
+|----------|----------------------|-------------------------------------------------------------------------|
+| Lua | `lua/inspect.lua`    | [kikito/inspect.lua](https://github.com/kikito/inspect.lua)             |
+| Lua | `lua/luarocks`       | [luarocks/luarock](https://github.com/luarocks/luarocks)               |
+| Dart | `dart/equatable`     | [felangel/equatable](https://github.com/felangel/equatable)             |
 | Swift | `swift/swift-tagged` | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
