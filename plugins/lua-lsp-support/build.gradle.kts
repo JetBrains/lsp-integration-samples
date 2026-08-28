@@ -6,17 +6,59 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
+
 dependencies {
     testImplementation(libs.junit)
 
-    // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         intellijIdeaUltimate("2026.1.4")
         testFramework(TestFrameworkType.Platform)
 
-        // Add plugin dependencies for compilation here, for example:
-        // bundledPlugin("com.intellij.java")
+    }
+}
+
+val luaLsVersion = "3.19.1"
+val luaLsArchives = listOf(
+    "win32-x64" to "zip",
+    "darwin-x64" to "tar.gz",
+    "darwin-arm64" to "tar.gz",
+    "linux-x64" to "tar.gz",
+    "linux-arm64" to "tar.gz",
+)
+
+val lspServer = configurations.create("lspServer")
+
+dependencies {
+    luaLsArchives.forEach { (classifier, extension) ->
+        lspServer("LuaLS:lua-language-server-$luaLsVersion:$luaLsVersion:$classifier@$extension")
+    }
+}
+
+val unpackLuaLs = tasks.register("unpackLuaLs") {
+    val outputDirectory = layout.buildDirectory.dir("lua-ls")
+    notCompatibleWithConfigurationCache("The unpack task uses Gradle archive file trees during execution")
+    inputs.files(lspServer)
+    outputs.dir(outputDirectory)
+
+    doLast {
+        val outputDir = outputDirectory.get().asFile
+        outputDir.deleteRecursively()
+
+        lspServer.resolvedConfiguration.resolvedArtifacts.forEach { artifact ->
+            val classifier = artifact.classifier
+                ?: throw GradleException("LuaLS archive has no classifier: ${artifact.name}")
+            val archiveFile = artifact.file
+            val archiveContents = when {
+                archiveFile.name.endsWith(".zip") -> zipTree(archiveFile)
+                archiveFile.name.endsWith(".tar.gz") -> tarTree(resources.gzip(archiveFile))
+                else -> throw GradleException("Unsupported LuaLS archive: ${archiveFile.name}")
+            }
+
+            project.copy {
+                from(archiveContents)
+                into(File(outputDir, classifier))
+            }
+        }
     }
 }
 
@@ -26,9 +68,23 @@ intellijPlatform {
             sinceBuild = "261"
         }
     }
-    tasks {
-        runIde {
-            jvmArgs("-Dlsp.client.playground.lua.language.server.path=/opt/homebrew/bin/lua-language-server")
+    nativeVariants {
+        enabled = true
+
+        linux {
+            x86_64.from(layout.buildDirectory.dir("lua-ls/linux-x64"))
+            arm64.from(layout.buildDirectory.dir("lua-ls/linux-arm64"))
+        }
+        mac {
+            x86_64.from(layout.buildDirectory.dir("lua-ls/darwin-x64"))
+            arm64.from(layout.buildDirectory.dir("lua-ls/darwin-arm64"))
+        }
+        windows {
+            x86_64.from(layout.buildDirectory.dir("lua-ls/win32-x64"))
         }
     }
+}
+
+tasks.matching { it.name.startsWith("buildPluginVariants_") }.configureEach {
+    dependsOn(unpackLuaLs)
 }

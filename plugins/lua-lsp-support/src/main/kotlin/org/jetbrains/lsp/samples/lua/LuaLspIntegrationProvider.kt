@@ -3,6 +3,8 @@ package org.jetbrains.lsp.samples.lua
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
+import com.intellij.ide.plugins.PluginManagerCore
+import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
@@ -12,10 +14,8 @@ import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import java.nio.file.Files
-import java.nio.file.Path
 import javax.swing.Icon
 
-private const val SERVER_DIRECTORY = "server"
 
 class LuaLspIntegrationProvider : LspIntegrationProvider {
   override fun fileOpened(
@@ -54,6 +54,19 @@ class LuaLspFileType : FileType {
 private fun isLuaLspFile(file: VirtualFile): Boolean = file.extension == "lua"
 
 private fun findBundledLuaLanguageServer(): String? {
-    val explicitPath = System.getProperty("lsp.client.playground.lua.language.server.path")
-    return explicitPath
+  val plugin = PluginManagerCore.getPlugin(
+    PluginId.getId("org.jetbrains.lua-lsp-support")
+  ) ?: return null
+
+  val executableName =
+    if (SystemInfo.isWindows) "lua-language-server.exe"
+    else "lua-language-server"
+
+  val executable = plugin.pluginPath
+    .resolve("bin")
+    .resolve(executableName)
+
+  return executable
+    .takeIf { Files.isRegularFile(it) }
+    ?.toString()
 }
