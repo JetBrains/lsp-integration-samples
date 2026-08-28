@@ -1,17 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>org.jetbrains.lsp.samples.lua-lsp-support</id>
 
-    <!-- Public plugin name should be written in Title Case.
-     Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
     <name>Lua LSP</name>
 
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://jetbrains.com/">JetBrains</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
         Provides Lua language support through the bundled LuaLS language server.
         ]]></description>
@@ -19,11 +13,13 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.lsp</depends>
+<!--    <depends>com.intellij.lsp.ui</depends>-->
 
+    <resource-bundle>messages.LuaLspBundle</resource-bundle>
 
-    <!-- Extensions defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspIntegrationProvider"/>
+        <fileType name="Lua" extensions="lua" implementationClass="org.jetbrains.lsp.samples.lua.LuaLspFileType"/>
     </extensions>
 
 </idea-plugin>
