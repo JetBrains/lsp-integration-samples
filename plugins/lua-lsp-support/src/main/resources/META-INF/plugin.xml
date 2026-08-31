@@ -17,7 +17,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspIntegrationProvider"/>
-        <fileType name="Lua" extensions="lua" implementationClass="org.jetbrains.lsp.samples.lua.LuaLspFileType"/>
+        <fileType name="textmate" extensions="lua"/>
     </extensions>
 
 </idea-plugin>

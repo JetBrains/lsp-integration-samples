@@ -35,6 +35,7 @@ dependencies {
 }
 
 val unpackLuaLs = tasks.register("unpackLuaLs") {
+    description = "unpack LuaLS archives"
     val outputDirectory = layout.buildDirectory.dir("lua-ls")
     notCompatibleWithConfigurationCache("The unpack task uses Gradle archive file trees during execution")
     inputs.files(lspServer)

@@ -5,7 +5,6 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.extensions.PluginId
-import com.intellij.openapi.fileTypes.FileType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
@@ -14,59 +13,50 @@ import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import java.nio.file.Files
-import javax.swing.Icon
 
 
 class LuaLspIntegrationProvider : LspIntegrationProvider {
-  override fun fileOpened(
-    project: Project,
-    file: VirtualFile,
-    clientStarter: LspIntegrationProvider.LspClientStarter,
-  ) {
-    if (isLuaLspFile(file)) {
-      clientStarter.ensureClientStarted(LuaLspServerDescriptor(project))
+    override fun fileOpened(
+        project: Project,
+        file: VirtualFile,
+        clientStarter: LspIntegrationProvider.LspClientStarter,
+    ) {
+        if (isLuaLspFile(file)) {
+            clientStarter.ensureClientStarted(LuaLspServerDescriptor(project))
+        }
     }
-  }
 
-  override fun createWidgetItem(lspClient: LspClient, currentFile: VirtualFile?): LspClientWidgetItem {
-    return LspClientWidgetItem(lspClient, currentFile, AllIcons.General.Language)
-  }
+    override fun createWidgetItem(lspClient: LspClient, currentFile: VirtualFile?): LspClientWidgetItem {
+        return LspClientWidgetItem(lspClient, currentFile, AllIcons.General.Language)
+    }
 }
 
 class LuaLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "Lua") {
-  override fun isSupportedFile(file: VirtualFile): Boolean = isLuaLspFile(file)
+    override fun isSupportedFile(file: VirtualFile): Boolean = isLuaLspFile(file)
 
-  override fun createCommandLine(): GeneralCommandLine {
-    val executable = findBundledLuaLanguageServer()
-      ?: throwMissingLspExecutable(project, "Lua", "lua.lsp.executable.not.found")
-    return GeneralCommandLine(executable)
-  }
-}
-
-class LuaLspFileType : FileType {
-  override fun getName(): String = "Lua"
-  override fun getDescription(): String = LuaLspBundle.message("lua.filetype.description")
-  override fun getDefaultExtension(): String = "lua"
-  override fun getIcon(): Icon = AllIcons.General.Language
-  override fun isBinary(): Boolean = false
+    override fun createCommandLine(): GeneralCommandLine {
+        val executable = findBundledLuaLanguageServer()
+            ?: throwMissingLspExecutable(project, "Lua", "lua.lsp.executable.not.found")
+        return GeneralCommandLine(executable)
+    }
 }
 
 private fun isLuaLspFile(file: VirtualFile): Boolean = file.extension == "lua"
 
 private fun findBundledLuaLanguageServer(): String? {
-  val plugin = PluginManagerCore.getPlugin(
-    PluginId.getId("org.jetbrains.lua-lsp-support")
-  ) ?: return null
+    val plugin = PluginManagerCore.getPlugin(
+        PluginId.getId("org.jetbrains.lua-lsp-support")
+    ) ?: return null
 
-  val executableName =
-    if (SystemInfo.isWindows) "lua-language-server.exe"
-    else "lua-language-server"
+    val executableName =
+        if (SystemInfo.isWindows) "lua-language-server.exe"
+        else "lua-language-server"
 
-  val executable = plugin.pluginPath
-    .resolve("bin")
-    .resolve(executableName)
+    val executable = plugin.pluginPath
+        .resolve("bin")
+        .resolve(executableName)
 
-  return executable
-    .takeIf { Files.isRegularFile(it) }
-    ?.toString()
+    return executable
+        .takeIf { Files.isRegularFile(it) }
+        ?.toString()
 }
