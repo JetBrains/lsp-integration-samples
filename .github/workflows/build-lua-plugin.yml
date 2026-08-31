@@ -1,0 +1,65 @@
+name: Build Lua LSP plugin
+
+on:
+  push:
+    paths:
+      - 'plugins/lua-lsp-support/**'
+      - '.github/workflows/build-lua-plugin.yml'
+  pull_request:
+    paths:
+      - 'plugins/lua-lsp-support/**'
+      - '.github/workflows/build-lua-plugin.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build plugin variants
+        working-directory: plugins/lua-lsp-support
+        run: ./gradlew buildPluginVariants --no-daemon
+
+      - name: Upload Linux ARM64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: lua-lsp-linux-arm64
+          path: plugins/lua-lsp-support/build/distributions/*-linux-arm64.zip
+          if-no-files-found: error
+
+      - name: Upload Linux x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: lua-lsp-linux-x86_64
+          path: plugins/lua-lsp-support/build/distributions/*-linux-x86_64.zip
+          if-no-files-found: error
+
+      - name: Upload macOS ARM64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: lua-lsp-mac-arm64
+          path: plugins/lua-lsp-support/build/distributions/*-mac-arm64.zip
+          if-no-files-found: error
+
+      - name: Upload macOS x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: lua-lsp-mac-x86_64
+          path: plugins/lua-lsp-support/build/distributions/*-mac-x86_64.zip
+          if-no-files-found: error
+
+      - name: Upload Windows x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: lua-lsp-windows-x86_64
+          path: plugins/lua-lsp-support/build/distributions/*-windows-x86_64.zip
+          if-no-files-found: error
