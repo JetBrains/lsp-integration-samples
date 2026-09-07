@@ -1,0 +1,65 @@
+name: Build Bazel LSP plugin
+
+on:
+  push:
+    paths:
+      - 'plugins/bazel-lsp-support/**'
+      - '.github/workflows/build-bazel-plugin.yml'
+  pull_request:
+    paths:
+      - 'plugins/bazel-lsp-support/**'
+      - '.github/workflows/build-bazel-plugin.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build plugin variants
+        working-directory: plugins/bazel-lsp-support
+        run: ./gradlew buildPluginVariants --no-daemon
+
+      - name: Upload Linux ARM64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: bazel-lsp-linux-arm64
+          path: plugins/bazel-lsp-support/build/distributions/*-linux-arm64.zip
+          if-no-files-found: error
+
+      - name: Upload Linux x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: bazel-lsp-linux-x86_64
+          path: plugins/bazel-lsp-support/build/distributions/*-linux-x86_64.zip
+          if-no-files-found: error
+
+      - name: Upload macOS ARM64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: bazel-lsp-mac-arm64
+          path: plugins/bazel-lsp-support/build/distributions/*-mac-arm64.zip
+          if-no-files-found: error
+
+      - name: Upload macOS x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: bazel-lsp-mac-x86_64
+          path: plugins/bazel-lsp-support/build/distributions/*-mac-x86_64.zip
+          if-no-files-found: error
+
+      - name: Upload Windows x86_64 plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: bazel-lsp-windows-x86_64
+          path: plugins/bazel-lsp-support/build/distributions/*-windows-x86_64.zip
+          if-no-files-found: error

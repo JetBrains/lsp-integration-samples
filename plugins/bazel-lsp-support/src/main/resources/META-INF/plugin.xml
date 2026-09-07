@@ -1,0 +1,19 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>org.jetbrains.bazel-lsp-support</id>
+    <name>Bazel LSP</name>
+    <vendor url="https://jetbrains.com/">JetBrains</vendor>
+
+    <description><![CDATA[
+        Provides Bazel Starlark language support through the bundled bazel-lsp language server.
+    ]]></description>
+
+    <depends>com.intellij.modules.lsp</depends>
+
+    <resource-bundle>messages.BazelLspBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.bazel.BazelLspIntegrationProvider"/>
+        <fileType name="textmate" extensions="bzl;bazel;star;sky" fileNames="BUILD;WORKSPACE"/>
+    </extensions>
+</idea-plugin>
