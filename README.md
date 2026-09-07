@@ -24,19 +24,30 @@ Sample projects from existing open-source repositories:
 plugin that integrates the [LuaLS language server](https://github.com/LuaLS/lua-language-server)
 with IntelliJ IDEA.
 
+### Bazel LSP support
+
+[`plugins/bazel-lsp-support`](plugins/bazel-lsp-support) is an IntelliJ Platform
+plugin that integrates the [bazel-lsp language server](https://github.com/cameron-martin/bazel-lsp)
+with IntelliJ IDEA. It handles `BUILD`, `WORKSPACE`, `*.bazel`, `*.bzl`,
+`*.star`, and `*.sky` files, and requires the `bazel` executable on the `PATH`.
+
 ### Download a plugin build
 
-The [Build Lua LSP plugin workflow](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-plugin.yml)
-uploads platform-specific plugin ZIPs as GitHub Actions artifacts. Open a
-successful workflow run and download the artifact for your platform:
+Each plugin has a workflow that uploads platform-specific plugin ZIPs as GitHub
+Actions artifacts:
 
-| Platform | Artifact |
-| --- | --- |
-| Linux ARM64 | `lua-lsp-linux-arm64` |
-| Linux x86_64 | `lua-lsp-linux-x86_64` |
-| macOS ARM64 | `lua-lsp-mac-arm64` |
-| macOS x86_64 | `lua-lsp-mac-x86_64` |
-| Windows x86_64 | `lua-lsp-windows-x86_64` |
+- [Build Lua LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-plugin.yml)
+- [Build Bazel LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-bazel-plugin.yml)
+
+Open a successful workflow run and download the artifact for your platform:
+
+| Platform | Lua artifact | Bazel artifact |
+| --- | --- | --- |
+| Linux ARM64 | `lua-lsp-linux-arm64` | `bazel-lsp-linux-arm64` |
+| Linux x86_64 | `lua-lsp-linux-x86_64` | `bazel-lsp-linux-x86_64` |
+| macOS ARM64 | `lua-lsp-mac-arm64` | `bazel-lsp-mac-arm64` |
+| macOS x86_64 | `lua-lsp-mac-x86_64` | `bazel-lsp-mac-x86_64` |
+| Windows x86_64 | `lua-lsp-windows-x86_64` | `bazel-lsp-windows-x86_64` |
 
 After downloading and extracting the artifact, install the plugin from the
 ZIP file using **Settings | Plugins | ⚙ | Install Plugin from Disk** in
