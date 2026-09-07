@@ -29,9 +29,9 @@ Several fields of the rockspec can be set explicitly:
 * `--license=<license>` sets license name, such as `MIT/X11` (by default inferred
   from `COPYING`, `LICENSE`, or `MIT-LICENSE.txt` files, if they exist).
 * `--summary=<text>` sets short description (by default inferred from
-  `README.md` or `README` files, if they exist).
+  `../../../../README.md` or `README` files, if they exist).
 * `--detailed=<text>` sets detailed description (by default inferred
-  from `README.md` or `README` files, if they exist).
+  from `../../../../README.md` or `README` files, if they exist).
 * `--homepage` sets project home page URL (by default may be inferred from source URL).
 * `--lua-version=<versions>` sets supported Lua versions. `<versions>` must be one of
   "5.1", "5.2", "5.3", "5.1,5.2", "5.2,5.3", or "5.1,5.2,5.3".

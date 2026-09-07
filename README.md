@@ -1,29 +1,43 @@
-# LSP Integration tests samples
+# LSP Integration Samples
 
-Sample projects used for **LSP performance and integration testing** in IntelliJ IDEA.
+This repository contains examples for LSP integration in IntelliJ IDEA:
 
-Each subdirectory is a small, self-contained project in a specific language. The
-tests open these projects to exercise LSP Client integration
-— diagnostics, completion, navigation — and to measure
-performance on realistic-but-minimal codebases.
+- `samples/` — sample projects for integration and performance testing.
+- `plugins/` — IntelliJ Platform plugin examples for LSP servers.
 
-## Layout
+## Samples
 
-Each sample lives in its own top-level directory named after the language:
+Sample projects from existing open-source repositories:
 
-```
-lsp-integration-samples/
-├── swift/      # Swift sample project
-├── lua/        # Lua sample project
-├── dart/       # Dart sample project
-└── ...
-```
+| Language | Project | Source |
+| --- | --- | --- |
+| Lua | [`samples/lua/inspect.lua`](samples/lua/inspect.lua) | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
+| Lua | [`samples/lua/luarocks`](samples/lua/luarocks) | [luarocks/luarocks](https://github.com/luarocks/luarocks) |
+| Dart | [`samples/dart/equatable`](samples/dart/equatable) | [felangel/equatable](https://github.com/felangel/equatable) |
+| Swift | [`samples/swift/swift-tagged`](samples/swift/swift-tagged) | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
 
-## Projects
+## Plugins
 
-| Language | Project              | Source                                                                  |
-|----------|----------------------|-------------------------------------------------------------------------|
-| Lua | `lua/inspect.lua`    | [kikito/inspect.lua](https://github.com/kikito/inspect.lua)             |
-| Lua | `lua/luarocks`       | [luarocks/luarock](https://github.com/luarocks/luarocks)               |
-| Dart | `dart/equatable`     | [felangel/equatable](https://github.com/felangel/equatable)             |
-| Swift | `swift/swift-tagged` | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
+### Lua LSP support
+
+[`plugins/lua-lsp-support`](plugins/lua-lsp-support) is an IntelliJ Platform
+plugin that integrates the [LuaLS language server](https://github.com/LuaLS/lua-language-server)
+with IntelliJ IDEA.
+
+### Download a plugin build
+
+The [Build Lua LSP plugin workflow](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-plugin.yml)
+uploads platform-specific plugin ZIPs as GitHub Actions artifacts. Open a
+successful workflow run and download the artifact for your platform:
+
+| Platform | Artifact |
+| --- | --- |
+| Linux ARM64 | `lua-lsp-linux-arm64` |
+| Linux x86_64 | `lua-lsp-linux-x86_64` |
+| macOS ARM64 | `lua-lsp-mac-arm64` |
+| macOS x86_64 | `lua-lsp-mac-x86_64` |
+| Windows x86_64 | `lua-lsp-windows-x86_64` |
+
+After downloading and extracting the artifact, install the plugin from the
+ZIP file using **Settings | Plugins | ⚙ | Install Plugin from Disk** in
+IntelliJ IDEA.

@@ -3,7 +3,7 @@
 
 Initialize a directory for a Lua project using LuaRocks.
 
-The command initializes a local [rocktree](rocks_repositories.md) which you can use to install dependencies dedicated to the project (Python user may think of a virtual environment). In addition, the command creates two wrapper scripts, `lua` and `luarocks`, which can be used to interact directly with the local rocktree and use the rocks installed there. `luarocks init` will also generate a [rockspec](rockspec_format.md) using the [`write_rockspec`](luarocks_write_rockspec.md) command, and a [`.gitignore`](https://git-scm.com/docs/gitignore) file.
+The command initializes a local [rocktree](rocks_repositories.md) which you can use to install dependencies dedicated to the project (Python user may think of a virtual environment). In addition, the command creates two wrapper scripts, `lua` and `luarocks`, which can be used to interact directly with the local rocktree and use the rocks installed there. `luarocks init` will also generate a [rockspec](rockspec_format.md) using the [`write_rockspec`](luarocks_write_rockspec.md) command, and a [`../../../../.gitignore`](https://git-scm.com/docs/gitignore) file.
 
 ## Usage
 
@@ -17,7 +17,7 @@ Arguments:
 * `--wrapper-dir <wrapper_dir>` sets the location where the 'lua' and 'luarocks' wrapper scripts should be generated; if not given, the current directory is used as a default.
 * `--reset` deletes any `.luarocks/config-5.x.lua` and `./lua` and generate new ones.
 * `--no-wrapper-scripts` prevents the generation of `./lua` and `./luarocks` launcher scripts.
-* `--no-gitignore` prevents the generation of a `.gitignore` file.
+* `--no-gitignore` prevents the generation of a `../../../../.gitignore` file.
 
 
 ## Example

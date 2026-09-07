@@ -325,7 +325,7 @@ class EquatableDateTimeSubclass extends EquatableDateTime {
 
 ## Benchmarks
 
-You can see and run performance benchmarks by heading over to [benchmarks](./benchmarks).
+You can see and run performance benchmarks by heading over to [benchmarks](benchmarks).
 
 ## Maintainers
 
