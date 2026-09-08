@@ -7,7 +7,7 @@
 
 This directory implements an IntelliJ Platform plugin that runs the native
 [TypeScript 7 language server](https://github.com/microsoft/TypeScript/releases/tag/v7.0.2)
-(`tsc --lsp --stdio`) as an LSP server for `.ts`, `.tsx`, `.mts`, and `.cts` files.
+(`tsc --lsp --stdio`) as an LSP server for `.ts`, `.tsx`, `.mts`, `.cts`, `.js`, `.jsx`, `.mjs`, and `.cjs` files.
 
 The server is not downloaded at runtime. The build fetches the
 `typescript-<os>-<arch>.tgz` release archives from GitHub and bundles the matching one into each

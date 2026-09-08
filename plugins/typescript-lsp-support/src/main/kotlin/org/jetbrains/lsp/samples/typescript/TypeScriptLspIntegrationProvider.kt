@@ -41,7 +41,7 @@ class TypeScriptLspServerDescriptor(project: Project) : ProjectWideLspClientDesc
     }
 }
 
-private val SUPPORTED_EXTENSIONS = setOf("ts", "tsx", "mts", "cts")
+private val SUPPORTED_EXTENSIONS = setOf("ts", "tsx", "mts", "cts", "js", "jsx", "mjs", "cjs")
 
 private fun isTypeScriptLspFile(file: VirtualFile): Boolean = file.extension in SUPPORTED_EXTENSIONS
 
