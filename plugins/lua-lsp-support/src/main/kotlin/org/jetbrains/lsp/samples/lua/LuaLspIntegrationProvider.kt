@@ -12,6 +12,7 @@ import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
+import com.intellij.platform.lsp.impl.LspPluginServerConfiguration
 import java.nio.file.Files
 
 
@@ -21,8 +22,9 @@ class LuaLspIntegrationProvider : LspIntegrationProvider {
         file: VirtualFile,
         clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
-        if (isLuaLspFile(file)) {
-            clientStarter.ensureClientStarted(LuaLspServerDescriptor(project))
+        val descriptor = LuaLspServerDescriptor(project)
+        if (descriptor.isSupportedFile(file)) {
+            clientStarter.ensureClientStarted(descriptor)
         }
     }
 
@@ -31,17 +33,23 @@ class LuaLspIntegrationProvider : LspIntegrationProvider {
     }
 }
 
-class LuaLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "Lua") {
-    override fun isSupportedFile(file: VirtualFile): Boolean = isLuaLspFile(file)
+class LuaLspServerDescriptor(
+    project: Project,
+    private val configuration: LspPluginServerConfiguration = LuaLspServerSettingsProvider.DEFAULT_CONFIGURATION,
+) : ProjectWideLspClientDescriptor(project, configuration.name) {
+    override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findBundledLuaLanguageServer()
-            ?: throwMissingLspExecutable(project, "Lua", "lua.lsp.executable.not.found")
-        return GeneralCommandLine(executable)
+            ?: throwMissingLspExecutable(project, configuration.name, "lua.lsp.executable.not.found")
+        return GeneralCommandLine(executable).apply {
+            addParameters(configuration.arguments)
+            configuration.environmentVariables.configureCommandLine(this, true)
+        }
     }
-}
 
-private fun isLuaLspFile(file: VirtualFile): Boolean = file.extension == "lua"
+    override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
+}
 
 private fun findBundledLuaLanguageServer(): String? {
     val plugin = PluginManagerCore.getPlugin(

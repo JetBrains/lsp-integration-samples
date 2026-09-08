@@ -11,12 +11,12 @@
         ]]></description>
 
     <depends>com.intellij.modules.lsp</depends>
-<!--    <depends>com.intellij.lsp.ui</depends>-->
 
     <resource-bundle>messages.LuaLspBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspServerSettingsProvider"/>
         <fileType name="textmate" extensions="lua"/>
     </extensions>
 

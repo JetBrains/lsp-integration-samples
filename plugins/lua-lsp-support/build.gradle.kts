@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.bundling.Zip
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -11,7 +12,10 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("2026.1.4")
+        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
+            useInstaller = false
+        }
+
         testFramework(TestFrameworkType.Platform)
 
     }
@@ -66,7 +70,7 @@ val unpackLuaLs = tasks.register("unpackLuaLs") {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "261"
+            sinceBuild = "263"
         }
     }
     nativeVariants {
@@ -86,6 +90,12 @@ intellijPlatform {
     }
 }
 
-tasks.matching { it.name.startsWith("buildPluginVariants_") }.configureEach {
-    dependsOn(unpackLuaLs)
-}
+tasks.withType<Zip>()
+    .matching { it.name.startsWith("buildPluginVariants_") }
+    .configureEach {
+        eachFile {
+            if (name == "lua-language-server" || name == "lua-language-server.exe") {
+                permissions { unix("0755") }
+            }
+        }
+    }

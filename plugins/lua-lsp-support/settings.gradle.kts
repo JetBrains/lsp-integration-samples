@@ -25,12 +25,10 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
 
-        // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
         intellijPlatform {
             defaultRepositories()
+            nightly()
         }
-        //https://github.com/LuaLS/lua-language-server/releases/download/3.19.1/lua-language-server-3.19.1-win32-x64.zip
-
 
         ivy {
             name = "releases"
