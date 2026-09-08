@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.tasks.PreparePluginVariantTask
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
@@ -102,12 +103,9 @@ intellijPlatform {
     }
 }
 
-// `prepareSandbox_runIde` bundles the native variant matching the host machine, so `runIde`
-// needs the server laid out as well.
-tasks.matching { it.name.startsWith("buildPluginVariants_") || it.name.startsWith("prepareSandbox") }
-    .configureEach {
-        dependsOn(layoutTypeScript)
-    }
+tasks.withType<PreparePluginVariantTask> {
+    dependsOn(layoutBazelLsp)
+}
 
 // Gradle produces reproducible archives and normalizes entry permissions to 0644,
 // which would strip the executable bit from the bundled language server.

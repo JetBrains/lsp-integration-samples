@@ -1,11 +1,11 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>org.jetbrains.bazel-lsp-support</id>
+    <id>com.intellij.experimental.bazel-lsp</id>
     <name>Bazel LSP</name>
     <vendor url="https://jetbrains.com/">JetBrains</vendor>
 
     <description><![CDATA[
-        Provides Bazel Starlark language support through the bundled bazel-lsp language server.
+        <b>Experimental</b>. Provides Bazel Starlark language support through the bundled bazel-lsp language server.
     ]]></description>
 
     <depends>com.intellij.modules.lsp</depends>

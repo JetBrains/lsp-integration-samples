@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.ivy
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
 rootProject.name = "bazel-lsp-support"
