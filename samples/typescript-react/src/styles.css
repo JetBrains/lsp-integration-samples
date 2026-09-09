@@ -1,0 +1,303 @@
+/* `source()` limits class detection to src/ — without it Tailwind also scans
+   README.md and emits utilities for words that merely appear in prose. */
+@import "tailwindcss" source("../src");
+
+/*
+ * Tailwind v4 is configured from CSS rather than a JS file. Everything declared
+ * in `@theme` becomes both a custom property and a set of utilities — so
+ * `--color-panel` gives `bg-panel`, `text-panel`, `border-panel`, and the same
+ * for the fonts and radii below. The recipe pages are written with those
+ * utilities; the shell below still uses hand-written classes, and both read
+ * their colours from here.
+ */
+@theme {
+  --color-bg: #0b0d12;
+  --color-panel: #12151d;
+  --color-panel-2: #171b25;
+  --color-sunken: #0e1117;
+  --color-line: #232936;
+  --color-line-lit: #35415a;
+  --color-ink: #e7eaf0;
+  --color-muted: #9aa3b5;
+  --color-dim: #6c7488;
+  --color-accent: #4c9aff;
+  --color-accent-ink: #04121f;
+  --color-accent-wash: #101c2c;
+  --color-teal: #5eead4;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+
+  --radius-card: 12px;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family: var(--font-sans);
+  }
+
+  html,
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1 {
+    font-size: 2rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    margin: 0 0 0.75rem;
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    background: var(--color-panel-2);
+    border: 1px solid var(--color-line);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+  }
+
+  pre {
+    font-family: var(--font-mono);
+    background: var(--color-sunken);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  ul.tight {
+    list-style: disc;
+    margin: 0 0 0.75rem;
+    padding-left: 1.15rem;
+    color: var(--color-muted);
+  }
+
+  ul.tight li {
+    margin-bottom: 0.45rem;
+    line-height: 1.55;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid var(--color-line);
+    background: rgba(11, 13, 18, 0.85);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .brand {
+    font-weight: 650;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+  }
+
+  .brand:hover {
+    text-decoration: none;
+  }
+
+  .brand-dim {
+    color: var(--color-dim);
+    font-weight: 400;
+  }
+
+  .nav {
+    display: flex;
+    gap: 1.1rem;
+    margin-right: auto;
+    font-size: 0.925rem;
+  }
+
+  .nav a {
+    color: var(--color-muted);
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav a:hover {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .nav a.active {
+    color: var(--color-ink);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    color: var(--color-teal);
+    border: 1px solid #1e3a38;
+    background: #101c1b;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  .content {
+    flex: 1;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .footer {
+    border-top: 1px solid var(--color-line);
+    padding: 1.25rem 1.5rem;
+    color: var(--color-dim);
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.6rem;
+    max-width: 22ch;
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.7rem;
+    color: var(--color-teal);
+    margin-bottom: 0.9rem;
+  }
+
+  .accent {
+    color: var(--color-accent);
+  }
+
+  .lede {
+    color: var(--color-muted);
+    max-width: 68ch;
+  }
+
+  .muted {
+    color: var(--color-muted);
+  }
+
+  .dim {
+    color: var(--color-dim);
+  }
+
+  .small {
+    font-size: 0.825rem;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+  }
+
+  /* Named `cards`, not `grid` — `grid` is a Tailwind display utility and a
+     component class of the same name would quietly apply its columns too. */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+  }
+
+  .card > :last-child {
+    margin-bottom: 0;
+  }
+
+  .button {
+    font: inherit;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 0.5rem 0.9rem;
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    filter: brightness(1.08);
+    text-decoration: none;
+  }
+
+  .button.ghost {
+    background: transparent;
+    border-color: var(--color-line);
+    color: var(--color-ink);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+}
