@@ -12,9 +12,10 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("2026.1.4")
+        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
+            useInstaller = false
+        }
         testFramework(TestFrameworkType.Platform)
-
     }
 }
 
@@ -104,7 +105,7 @@ intellijPlatform {
 }
 
 tasks.withType<PreparePluginVariantTask> {
-    dependsOn(layoutBazelLsp)
+    dependsOn(layoutTypeScript)
 }
 
 // Gradle produces reproducible archives and normalizes entry permissions to 0644,
