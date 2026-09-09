@@ -1,4 +1,3 @@
-import org.gradle.api.tasks.bundling.Zip
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -12,7 +11,7 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("263-SNAPSHOT") {
+        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
             useInstaller = false
         }
 
