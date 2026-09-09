@@ -7,7 +7,6 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-
 dependencies {
     testImplementation(libs.junit)
 
@@ -17,53 +16,27 @@ dependencies {
         }
 
         testFramework(TestFrameworkType.Platform)
-
     }
 }
 
 val luaLsVersion = "3.19.1"
-val luaLsArchives = listOf(
-    "win32-x64" to "zip",
-    "darwin-x64" to "tar.gz",
-    "darwin-arm64" to "tar.gz",
-    "linux-x64" to "tar.gz",
-    "linux-arm64" to "tar.gz",
-)
 
-val lspServer = configurations.create("lspServer")
+/**
+ * Resolves the LuaLS archive for the given platform and exposes its content as a file tree,
+ * so that native variant archives unpack it directly, with no intermediate directory involved.
+ */
+fun luaLsArchive(classifier: String, extension: String): FileTree {
+    val declared = configurations.dependencyScope("lspServer-$classifier")
+    dependencies.add(declared.name, "LuaLS:lua-language-server-$luaLsVersion:$luaLsVersion:$classifier@$extension")
 
-dependencies {
-    luaLsArchives.forEach { (classifier, extension) ->
-        lspServer("LuaLS:lua-language-server-$luaLsVersion:$luaLsVersion:$classifier@$extension")
-    }
-}
+    val archiveFile = configurations.resolvable("lspServer-${classifier}Archive") {
+        extendsFrom(declared.get())
+    }.map { it.singleFile }
 
-val unpackLuaLs = tasks.register("unpackLuaLs") {
-    description = "unpack LuaLS archives"
-    val outputDirectory = layout.buildDirectory.dir("lua-ls")
-    notCompatibleWithConfigurationCache("The unpack task uses Gradle archive file trees during execution")
-    inputs.files(lspServer)
-    outputs.dir(outputDirectory)
-
-    doLast {
-        val outputDir = outputDirectory.get().asFile
-        outputDir.deleteRecursively()
-
-        lspServer.resolvedConfiguration.resolvedArtifacts.forEach { artifact ->
-            val classifier = artifact.classifier
-                ?: throw GradleException("LuaLS archive has no classifier: ${artifact.name}")
-            val archiveFile = artifact.file
-            val archiveContents = when {
-                archiveFile.name.endsWith(".zip") -> zipTree(archiveFile)
-                archiveFile.name.endsWith(".tar.gz") -> tarTree(resources.gzip(archiveFile))
-                else -> throw GradleException("Unsupported LuaLS archive: ${archiveFile.name}")
-            }
-
-            project.copy {
-                from(archiveContents)
-                into(File(outputDir, classifier))
-            }
-        }
+    return when (extension) {
+        "zip" -> zipTree(archiveFile)
+        "tar.gz" -> tarTree(resources.gzip(archiveFile))
+        else -> throw GradleException("Unsupported LuaLS archive extension: $extension")
     }
 }
 
@@ -77,15 +50,15 @@ intellijPlatform {
         enabled = true
 
         linux {
-            x86_64.from(layout.buildDirectory.dir("lua-ls/linux-x64"))
-            arm64.from(layout.buildDirectory.dir("lua-ls/linux-arm64"))
+            x86_64.from(luaLsArchive("linux-x64", "tar.gz"))
+            arm64.from(luaLsArchive("linux-arm64", "tar.gz"))
         }
         mac {
-            x86_64.from(layout.buildDirectory.dir("lua-ls/darwin-x64"))
-            arm64.from(layout.buildDirectory.dir("lua-ls/darwin-arm64"))
+            x86_64.from(luaLsArchive("darwin-x64", "tar.gz"))
+            arm64.from(luaLsArchive("darwin-arm64", "tar.gz"))
         }
         windows {
-            x86_64.from(layout.buildDirectory.dir("lua-ls/win32-x64"))
+            x86_64.from(luaLsArchive("win32-x64", "zip"))
         }
     }
 }
