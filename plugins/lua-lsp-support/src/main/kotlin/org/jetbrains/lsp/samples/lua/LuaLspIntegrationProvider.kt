@@ -10,9 +10,11 @@ import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
+import com.intellij.platform.lsp.api.LspIntegrationSettings
+import com.intellij.platform.lsp.api.LspPluginServerConfiguration
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
-import com.intellij.platform.lsp.impl.LspPluginServerConfiguration
+import com.intellij.platform.lsp.impl.createInitializationOptions
 import java.nio.file.Files
 
 
@@ -35,7 +37,10 @@ class LuaLspIntegrationProvider : LspIntegrationProvider {
 
 class LuaLspServerDescriptor(
     project: Project,
-    private val configuration: LspPluginServerConfiguration = LuaLspServerSettingsProvider.DEFAULT_CONFIGURATION,
+    private val configuration: LspPluginServerConfiguration =
+        LspIntegrationSettings.getInstanceOrNull(project)
+            ?.getPluginConfiguration(LuaLspServerSettingsProvider.SERVER_ID)
+            ?: DEFAULT_CONFIGURATION,
 ) : ProjectWideLspClientDescriptor(project, configuration.name) {
     override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
@@ -44,7 +49,7 @@ class LuaLspServerDescriptor(
             ?: throwMissingLspExecutable(project, configuration.name, "lua.lsp.executable.not.found")
         return GeneralCommandLine(executable).apply {
             addParameters(configuration.arguments)
-            configuration.environmentVariables.configureCommandLine(this, true)
+            configuration.environmentVariables.configureCommandLine(this)
         }
     }
 

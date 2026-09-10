@@ -2,19 +2,20 @@
 package org.jetbrains.lsp.samples.lua
 
 import com.intellij.platform.lsp.api.LspIntegrationProvider
-import com.intellij.platform.lsp.impl.LspPluginServerConfiguration
-import com.intellij.platform.lsp.impl.LspServerSettingsProvider
+import com.intellij.platform.lsp.api.LspIntegrationSettingsProvider
+import com.intellij.platform.lsp.api.LspPluginServerConfiguration
 
-class LuaLspServerSettingsProvider : LspServerSettingsProvider {
+class LuaLspServerSettingsProvider : LspIntegrationSettingsProvider {
     override val serverId: String = SERVER_ID
     override val integrationProviderClass: Class<out LspIntegrationProvider> = LuaLspIntegrationProvider::class.java
     override val defaultConfiguration: LspPluginServerConfiguration = DEFAULT_CONFIGURATION
 
     companion object {
         const val SERVER_ID: String = "lua"
-        val DEFAULT_CONFIGURATION: LspPluginServerConfiguration = LspPluginServerConfiguration(
-            name = "Lua",
-            filePatterns = listOf("*.lua"),
-        )
     }
 }
+
+val DEFAULT_CONFIGURATION: LspPluginServerConfiguration = LspPluginServerConfiguration(
+    name = "Lua",
+    filePatterns = listOf("*.lua"),
+)
