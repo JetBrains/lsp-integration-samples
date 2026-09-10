@@ -1,0 +1,37 @@
+name: Build Tailwind CSS LSP plugin
+
+on:
+  push:
+    paths:
+      - 'plugins/tailwind-lsp-support/**'
+      - '.github/workflows/build-tailwind-plugin.yml'
+  pull_request:
+    paths:
+      - 'plugins/tailwind-lsp-support/**'
+      - '.github/workflows/build-tailwind-plugin.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v5
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Build plugin
+        working-directory: plugins/tailwind-lsp-support
+        run: ./gradlew buildPlugin --no-daemon
+
+      - name: Upload plugin
+        uses: actions/upload-artifact@v5
+        with:
+          name: tailwind-lsp
+          path: plugins/tailwind-lsp-support/build/distributions/*.zip
+          if-no-files-found: error
