@@ -12,15 +12,15 @@ import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import com.intellij.platform.lsp.impl.nodeRuntime.withNodeRuntimeEnsured
 
 
-class TailwindLspIntegrationProvider : LspIntegrationProvider {
+class CssLspIntegrationProvider : LspIntegrationProvider {
   override fun fileOpened(
     project: Project,
     file: VirtualFile,
     clientStarter: LspIntegrationProvider.LspClientStarter,
   ) {
-    if (isTailwindLspFile(file)) {
+    if (isCssLspFile(file)) {
       withNodeRuntimeEnsured(project) {
-        clientStarter.ensureClientStarted(TailwindLspServerDescriptor(project))
+        clientStarter.ensureClientStarted(CssLspServerDescriptor(project))
       }
     }
   }
@@ -30,13 +30,14 @@ class TailwindLspIntegrationProvider : LspIntegrationProvider {
   }
 }
 
-class TailwindLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "Tailwind CSS") {
-  override fun isSupportedFile(file: VirtualFile): Boolean = isTailwindLspFile(file)
+class CssLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "CSS") {
+  override fun isSupportedFile(file: VirtualFile): Boolean = isCssLspFile(file)
 
   override fun createCommandLine(): GeneralCommandLine =
-    createBundledServerCommandLine(project, "tailwindcss-language-server", presentableName)
+    createBundledServerCommandLine(project, "css-language-server", presentableName)
 }
 
-private val SUPPORTED_EXTENSIONS = setOf("css", "scss", "less", "html", "js", "jsx", "ts", "tsx")
+// The server picks its dialect from the language ID, and handles `css`, `scss`, and `less`.
+private val SUPPORTED_EXTENSIONS = setOf("css", "scss", "less")
 
-private fun isTailwindLspFile(file: VirtualFile): Boolean = file.extension in SUPPORTED_EXTENSIONS
+private fun isCssLspFile(file: VirtualFile): Boolean = file.extension in SUPPORTED_EXTENSIONS

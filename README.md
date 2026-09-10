@@ -41,10 +41,11 @@ with IntelliJ IDEA.
 
 [`plugins/tailwind-lsp-support`](plugins/tailwind-lsp-support) is an IntelliJ Platform
 plugin that integrates the [Tailwind CSS language server](https://github.com/tailwindlabs/tailwindcss-intellisense)
-with IntelliJ IDEA. It handles `css`, `scss`, `less`, `html`, `js`, `jsx`, `ts`, and `tsx`
-files. The `@tailwindcss/language-server` npm package is bundled at build time; it is a
-platform-independent JS bundle, started with `npx` from the IDE's managed Node.js runtime,
-which the plugin downloads on demand.
+with IntelliJ IDEA. The npm package ships two servers, and the plugin registers a client
+for each: the Tailwind one for `css`, `scss`, `less`, `html`, `js`, `jsx`, `ts`, and `tsx`
+files, and the CSS one for `css`, `scss`, and `less`. The package is bundled at build time;
+it is a platform-independent JS bundle, started with `npx` from the IDE's managed Node.js
+runtime, which the plugin downloads on demand.
 
 ### Download a plugin build
 

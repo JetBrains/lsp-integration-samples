@@ -5,9 +5,27 @@
 
 ## Overview
 
-This directory implements an IntelliJ Platform plugin that runs the
-[Tailwind CSS language server](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/main/packages/tailwindcss-language-server)
-as an LSP server for `.css`, `.scss`, `.less`, `.html`, `.js`, `.jsx`, `.ts`, and `.tsx` files.
+This directory implements an IntelliJ Platform plugin that runs the two language servers of
+[`@tailwindcss/language-server`](https://github.com/tailwindlabs/tailwindcss-intellisense/tree/main/packages/tailwindcss-language-server),
+one LSP client each:
+
+| Client | Executable | Files |
+| --- | --- | --- |
+| Tailwind CSS | `tailwindcss-language-server` | `.css`, `.scss`, `.less`, `.html`, `.js`, `.jsx`, `.ts`, `.tsx` |
+| CSS | `css-language-server` | `.css`, `.scss`, `.less` |
+
+Both clients run for a `.css` file, which is what the platform allows: one LSP client per descriptor,
+not per file. The CSS server picks its dialect from the language ID, so it covers plain CSS, SCSS,
+and LESS with one server.
+
+`.css`, `.scss`, and `.less` are registered as TextMate file types, so the CSS language server
+drives the editor rather than the IDE's own CSS support. Without that, the IDE's own file types win
+and the LSP client only supplements them. The IDE bundles TextMate grammars for all three. The JS
+and TypeScript extensions keep their native file types.
+
+The TextMate association does not change which dialect the server sees: `LspClientDescriptor`
+derives the language ID from the file name, falling back to the lowercased extension, so a `.scss`
+file is still announced as `scss` and gets SCSS parsing.
 
 The server is not downloaded at runtime. The build fetches the `@tailwindcss/language-server`
 package from the npm registry and bundles it into the plugin, where it lands in the
@@ -18,7 +36,7 @@ TypeScript samples this plugin needs no native variants: one distribution ZIP wo
 The bundle is plain JavaScript, so it needs a Node.js interpreter. `withNodeRuntimeEnsured`
 downloads the IDE's managed Node.js runtime if it is missing before the client is started, and
 `LspNodeRuntimeManager` then resolves `npx` and adds the runtime to the command line's environment,
-giving `npx --no --prefix <plugin>/tailwindcss-language-server tailwindcss-language-server --stdio`.
+giving `npx --no --prefix <plugin>/tailwindcss-language-server <executable> --stdio`.
 
 Nothing is downloaded by that command: `--no` forbids installing, and `--prefix` points npx at the
 bundled package so it takes the executable from the package's `bin` entries. `--prefix` is what
