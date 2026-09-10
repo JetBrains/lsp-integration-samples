@@ -1,0 +1,22 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>org.jetbrains.tailwind-lsp-support</id>
+
+    <name>Tailwind CSS LSP</name>
+
+    <vendor url="https://jetbrains.com/">JetBrains</vendor>
+
+    <description><![CDATA[
+        Provides Tailwind CSS support through the <code>@tailwindcss/language-server</code> package,
+        run with <code>npx</code> from the IDE's managed Node.js runtime.
+        ]]></description>
+
+    <depends>com.intellij.modules.lsp</depends>
+
+    <resource-bundle>messages.TailwindLspBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.tailwind.TailwindLspIntegrationProvider"/>
+    </extensions>
+
+</idea-plugin>
