@@ -11,7 +11,7 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("263-SNAPSHOT") {
+        intellijIdeaUltimate("LATEST-EAP-SNAPSHOT") {
             useInstaller = false
         }
 
