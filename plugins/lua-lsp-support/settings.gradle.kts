@@ -27,7 +27,6 @@ dependencyResolutionManagement {
 
         intellijPlatform {
             defaultRepositories()
-            nightly()
         }
 
         ivy {

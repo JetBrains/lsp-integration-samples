@@ -11,7 +11,7 @@ dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("LATEST-EAP-SNAPSHOT") {
+        intellijIdeaUltimate("263.5153.40-EAP-CANDIDATE") {
             useInstaller = false
         }
 
