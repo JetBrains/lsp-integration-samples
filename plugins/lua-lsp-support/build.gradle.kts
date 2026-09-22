@@ -1,3 +1,4 @@
+import org.jetbrains.intellij.platform.gradle.tasks.BuildPluginTask
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -39,6 +40,9 @@ fun luaLsArchive(classifier: String, extension: String): FileTree {
     }
 }
 
+val linuxX64LuaLs = luaLsArchive("linux-x64", "tar.gz")
+val linuxArm64LuaLs = luaLsArchive("linux-arm64", "tar.gz")
+
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
@@ -49,8 +53,8 @@ intellijPlatform {
         enabled = true
 
         linux {
-            x86_64.from(luaLsArchive("linux-x64", "tar.gz"))
-            arm64.from(luaLsArchive("linux-arm64", "tar.gz"))
+            x86_64.from(linuxX64LuaLs)
+            arm64.from(linuxArm64LuaLs)
         }
         mac {
             x86_64.from(luaLsArchive("darwin-x64", "tar.gz"))
@@ -62,12 +66,19 @@ intellijPlatform {
     }
 }
 
-tasks.withType<Zip>()
-    .matching { it.name.startsWith("buildPluginVariants_") }
-    .configureEach {
-        eachFile {
-            if (name == "lua-language-server" || name == "lua-language-server.exe") {
-                permissions { unix("0755") }
-            }
+tasks.withType<BuildPluginTask>().configureEach {
+    // Include both Linux distributions in every plugin archive. They are
+    // needed when the IDE frontend runs on one OS and the backend runs on Linux.
+    from(linuxX64LuaLs) {
+        into("lua-ls/linux-x64")
+    }
+    from(linuxArm64LuaLs) {
+        into("lua-ls/linux-arm64")
+    }
+
+    eachFile {
+        if (name == "lua-language-server" || name == "lua-language-server.exe") {
+            permissions { unix("0755") }
         }
     }
+}
