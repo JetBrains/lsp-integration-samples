@@ -3,11 +3,18 @@ package org.jetbrains.lsp.samples.lua
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.openapi.extensions.PluginId
+import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.platform.eel.isArm64
+import com.intellij.platform.eel.isLinux
+import com.intellij.platform.eel.isX86_64
+import com.intellij.platform.eel.provider.LocalEelDescriptor
+import com.intellij.platform.eel.provider.asEelPath
+import com.intellij.platform.eel.provider.getEelDescriptor
+import com.intellij.platform.eel.provider.toEelApiBlocking
+import com.intellij.platform.eel.provider.utils.EelPathUtils.TransferTarget
+import com.intellij.platform.eel.provider.utils.EelPathUtils.transferLocalContentToRemote
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.LspIntegrationSettings
@@ -16,6 +23,7 @@ import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import com.intellij.platform.lsp.impl.createInitializationOptions
 import java.nio.file.Files
+import java.nio.file.Path
 
 
 class LuaLspIntegrationProvider : LspIntegrationProvider {
@@ -45,9 +53,9 @@ class LuaLspServerDescriptor(
     override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
-        val executable = findBundledLuaLanguageServer()
+        val executable = findLuaLanguageServerOnExecutionHost(project)
             ?: throwMissingLspExecutable(project, configuration.name, "lua.lsp.executable.not.found")
-        return GeneralCommandLine(executable).apply {
+        return GeneralCommandLine(executable.asEelPath().toString()).apply {
             addParameters(configuration.arguments)
             configuration.environmentVariables.configureCommandLine(this)
         }
@@ -56,20 +64,40 @@ class LuaLspServerDescriptor(
     override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
 }
 
-private fun findBundledLuaLanguageServer(): String? {
-    val plugin = PluginManagerCore.getPlugin(
-        PluginId.getId("org.jetbrains.lua-lsp-support")
+private fun findLuaLanguageServerOnExecutionHost(project: Project): Path? {
+    val descriptor = project.getEelDescriptor()
+
+    if (descriptor === LocalEelDescriptor) {
+        return findPluginPath("bin/lua-language-server")
+            ?: findPluginPath("bin/lua-language-server.exe")
+    }
+
+    val platform = descriptor.toEelApiBlocking().platform
+    val distributionName = when {
+        platform.isLinux && platform.isX86_64 -> "linux-x64"
+        platform.isLinux && platform.isArm64 -> "linux-arm64"
+        else -> return null
+    }
+
+    val localDistribution = findPluginPath("lua-ls/$distributionName")
+        ?.takeIf { Files.isDirectory(it) }
+        ?: return null
+
+    val remoteDistribution = transferLocalContentToRemote(
+        source = localDistribution,
+        target = TransferTarget.Temporary(descriptor),
+    )
+
+    return remoteDistribution
+        .resolve("bin/lua-language-server")
+        .takeIf { Files.isRegularFile(it) }
+}
+
+private fun findPluginPath(relativePath: String): Path? {
+    val path = PluginPathManager.getPluginDistPath(
+        LuaLspIntegrationProvider::class.java,
+        relativePath,
     ) ?: return null
 
-    val executableName =
-        if (SystemInfo.isWindows) "lua-language-server.exe"
-        else "lua-language-server"
-
-    val executable = plugin.pluginPath
-        .resolve("bin")
-        .resolve(executableName)
-
-    return executable
-        .takeIf { Files.isRegularFile(it) }
-        ?.toString()
+    return path.takeIf { Files.isRegularFile(it) || Files.isDirectory(it) }
 }
