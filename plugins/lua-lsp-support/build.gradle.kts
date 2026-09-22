@@ -6,17 +6,15 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-
 dependencies {
     testImplementation(libs.junit)
 
     intellijPlatform {
-        intellijIdeaUltimate("263.5153.40-EAP-CANDIDATE") {
+        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
             useInstaller = false
         }
 
         testFramework(TestFrameworkType.Platform)
-
     }
 }
 
