@@ -1,0 +1,15 @@
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+
+    <resource-bundle>messages.LuaLspBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.modular.LuaLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.lua.modular.LuaLspServerSettingsProvider"/>
+        <fileType name="textmate" extensions="lua"/>
+    </extensions>
+</idea-plugin>

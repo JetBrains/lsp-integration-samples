@@ -1,0 +1,16 @@
+<idea-plugin>
+    <id>lua.lsp.modular</id>
+
+    <name>Lua LSP (Modular)</name>
+
+    <vendor url="https://jetbrains.com/">JetBrains</vendor>
+
+    <description><![CDATA[
+        Provides Lua language support through the bundled LuaLS language server.
+        The complete integration is registered in the frontend module for split-mode and remote development.
+    ]]></description>
+
+    <content>
+        <module name="lua.lsp.modular.frontend" loading="required"/>
+    </content>
+</idea-plugin>
