@@ -83,10 +83,10 @@ tasks.withType<BuildPluginTask>().configureEach {
     // Keep both Linux distributions in every plugin archive so the frontend can
     // transfer the matching server to the remote host at runtime.
     from(linuxX64LuaLs) {
-        into("lua-ls/linux-x64")
+        into("linux-x64")
     }
     from(linuxArm64LuaLs) {
-        into("lua-ls/linux-arm64")
+        into("linux-arm64")
     }
 
     eachFile {
