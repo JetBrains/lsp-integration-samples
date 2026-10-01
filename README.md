@@ -7,7 +7,7 @@ This repository contains examples for LSP integration in IntelliJ IDEA:
 
 ## Samples
 
-Sample projects from existing open-source repositories:
+Sample projects for integration and performance testing:
 
 | Language | Project | Source |
 | --- | --- | --- |
@@ -15,6 +15,9 @@ Sample projects from existing open-source repositories:
 | Lua | [`samples/lua/luarocks`](samples/lua/luarocks) | [luarocks/luarocks](https://github.com/luarocks/luarocks) |
 | Dart | [`samples/dart/equatable`](samples/dart/equatable) | [felangel/equatable](https://github.com/felangel/equatable) |
 | Swift | [`samples/swift/swift-tagged`](samples/swift/swift-tagged) | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
+| TypeScript / React | [`samples/typescript-react`](samples/typescript-react) | In-repository sample |
+
+The TypeScript / React sample uses TypeScript 7, Vite, Tailwind CSS, and TanStack Router.
 
 ## Plugins
 
@@ -49,7 +52,7 @@ runtime, which the plugin downloads on demand.
 
 ### Download a plugin build
 
-Each plugin has a workflow that uploads platform-specific plugin ZIPs as GitHub
+Each plugin has a workflow that uploads installable plugin ZIPs as GitHub
 Actions artifacts:
 
 - [Build Modular Lua LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-modular-plugin.yml)
