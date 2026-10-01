@@ -17,7 +17,7 @@ pluginManagement {
 }
 
 plugins {
-    id("org.jetbrains.intellij.platform.settings") version "2.19.0-SNAPSHOT"
+    id("org.jetbrains.intellij.platform.settings") version "2.19.1-SNAPSHOT"
 }
 
 rootProject.name = "lua.lsp.modular"
@@ -27,6 +27,7 @@ dependencyResolutionManagement {
         mavenCentral()
         intellijPlatform {
             defaultRepositories()
+            nightly()
         }
 
         ivy {

@@ -3,7 +3,6 @@ package org.jetbrains.lsp.samples.lua.modular
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.plugins.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -15,6 +14,7 @@ import com.intellij.platform.eel.isX86_64
 import com.intellij.platform.eel.provider.asEelPath
 import com.intellij.platform.eel.provider.getEelDescriptor
 import com.intellij.platform.eel.provider.toEelApiBlocking
+import com.intellij.platform.eel.provider.utils.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.LspIntegrationSettings

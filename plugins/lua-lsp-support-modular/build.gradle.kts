@@ -15,7 +15,7 @@ subprojects {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
+        intellijIdeaUltimate("263-SNAPSHOT") {
             useInstaller = false
         }
 
