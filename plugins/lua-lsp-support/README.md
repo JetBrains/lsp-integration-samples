@@ -1,7 +1,7 @@
-# Modular Lua LSP
+# Lua LSP
 
 This sample integrates the LuaLS language server with IntelliJ IDEA using a
-modular, split-mode plugin. The complete integration lives in the `frontend`
+split-mode plugin. The complete integration lives in the `frontend`
 content module.
 
 ## Module layout

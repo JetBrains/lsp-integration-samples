@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>lua.lsp.modular</id>
+    <id>lua.lsp</id>
 
-    <name>Lua LSP (Modular)</name>
+    <name>Lua LSP</name>
 
     <vendor url="https://jetbrains.com/">JetBrains</vendor>
 
@@ -11,6 +11,6 @@
     ]]></description>
 
     <content>
-        <module name="lua.lsp.modular.frontend" loading="required"/>
+        <module name="lua.lsp.frontend" loading="required"/>
     </content>
 </idea-plugin>

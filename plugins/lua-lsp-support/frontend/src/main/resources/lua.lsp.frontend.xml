@@ -8,8 +8,8 @@
     <resource-bundle>messages.LuaLspBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.modular.LuaLspIntegrationProvider"/>
-        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.lua.modular.LuaLspServerSettingsProvider"/>
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.lua.LuaLspServerSettingsProvider"/>
         <fileType name="textmate" extensions="lua"/>
     </extensions>
 </idea-plugin>

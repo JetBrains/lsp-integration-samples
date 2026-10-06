@@ -21,9 +21,9 @@ The TypeScript / React sample uses TypeScript 7, Vite, Tailwind CSS, and TanStac
 
 ## Plugins
 
-### Modular Lua LSP support
+### Lua LSP support
 
-[`plugins/lua-lsp-support-modular`](plugins/lua-lsp-support-modular) is a modular IntelliJ Platform
+[`plugins/lua-lsp-support`](plugins/lua-lsp-support) is an IntelliJ Platform
 plugin that integrates the [LuaLS language server](https://github.com/LuaLS/lua-language-server)
 with IntelliJ IDEA.
 
@@ -55,21 +55,21 @@ runtime, which the plugin downloads on demand.
 Each plugin has a workflow that uploads installable plugin ZIPs as GitHub
 Actions artifacts:
 
-- [Build Modular Lua LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-modular-plugin.yml)
+- [Build Lua LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-plugin.yml)
 - [Build Bazel LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-bazel-plugin.yml)
 - [Build TypeScript LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-typescript-plugin.yml)
 - [Build Tailwind CSS LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-tailwind-plugin.yml)
 
 Open a successful workflow run and download the artifact for your platform:
 
-| Platform | Modular Lua artifact | Bazel artifact | TypeScript artifact |
+| Platform | Lua artifact | Bazel artifact | TypeScript artifact |
 | --- | --- | --- | --- |
-| Linux ARM64 | `lua-lsp-modular-linux-arm64` | `bazel-lsp-linux-arm64` | `typescript-lsp-linux-arm64` |
-| Linux x86_64 | `lua-lsp-modular-linux-x86_64` | `bazel-lsp-linux-x86_64` | `typescript-lsp-linux-x86_64` |
-| macOS ARM64 | `lua-lsp-modular-mac-arm64` | `bazel-lsp-mac-arm64` | `typescript-lsp-mac-arm64` |
-| macOS x86_64 | `lua-lsp-modular-mac-x86_64` | `bazel-lsp-mac-x86_64` | `typescript-lsp-mac-x86_64` |
+| Linux ARM64 | `lua-lsp-linux-arm64` | `bazel-lsp-linux-arm64` | `typescript-lsp-linux-arm64` |
+| Linux x86_64 | `lua-lsp-linux-x86_64` | `bazel-lsp-linux-x86_64` | `typescript-lsp-linux-x86_64` |
+| macOS ARM64 | `lua-lsp-mac-arm64` | `bazel-lsp-mac-arm64` | `typescript-lsp-mac-arm64` |
+| macOS x86_64 | `lua-lsp-mac-x86_64` | `bazel-lsp-mac-x86_64` | `typescript-lsp-mac-x86_64` |
 | Windows ARM64 | — | — | `typescript-lsp-windows-arm64` |
-| Windows x86_64 | `lua-lsp-modular-windows-x86_64` | `bazel-lsp-windows-x86_64` | `typescript-lsp-windows-x86_64` |
+| Windows x86_64 | `lua-lsp-windows-x86_64` | `bazel-lsp-windows-x86_64` | `typescript-lsp-windows-x86_64` |
 
 The Tailwind CSS plugin's server is platform-independent, so its workflow uploads a
 single `tailwind-lsp` artifact that works on every platform.
