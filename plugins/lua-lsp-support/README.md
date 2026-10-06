@@ -7,7 +7,7 @@ content module.
 ## Module layout
 
 - `frontend` contains the LSP provider, server settings, executable lookup,
-  remote-host transfer, notifications, and frontend registration.
+  remote-host transfer, and frontend registration.
 - There are no shared or backend modules because the integration has no
   cross-process RPC contracts or backend-side functionality.
 - The root project assembles both local native variants and Linux distributions

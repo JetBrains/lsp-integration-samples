@@ -1,6 +1,7 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package org.jetbrains.lsp.samples.lua
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.PluginPathManager
@@ -53,7 +54,7 @@ class LuaLspServerDescriptor(
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findLuaLanguageServerOnExecutionHost(project)
-            ?: throwMissingLspExecutable(project, configuration.name, "lua.lsp.executable.not.found")
+            ?: throw ExecutionException(LuaLspBundle.message("lua.lsp.executable.not.found"))
         return GeneralCommandLine(executable.asEelPath().toString()).apply {
             addParameters(configuration.arguments)
             configuration.environmentVariables.configureCommandLine(this)
