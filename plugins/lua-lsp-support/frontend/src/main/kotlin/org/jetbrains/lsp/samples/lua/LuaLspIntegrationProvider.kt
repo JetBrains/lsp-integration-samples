@@ -54,7 +54,7 @@ class LuaLspServerDescriptor(
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findLuaLanguageServerOnExecutionHost(project)
-            ?: throw ExecutionException(LuaLspBundle.message("lua.lsp.executable.not.found"))
+            ?: throw ExecutionException("The bundled Lua language server executable was not found in the plugin installation.")
         return GeneralCommandLine(executable.asEelPath().toString()).apply {
             addParameters(configuration.arguments)
             configuration.environmentVariables.configureCommandLine(this)
