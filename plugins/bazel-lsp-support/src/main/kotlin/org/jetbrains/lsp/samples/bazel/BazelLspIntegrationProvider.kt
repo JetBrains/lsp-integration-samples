@@ -1,10 +1,10 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package org.jetbrains.lsp.samples.bazel
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.openapi.extensions.PluginId
+import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
@@ -37,7 +37,7 @@ class BazelLspServerDescriptor(project: Project) : ProjectWideLspClientDescripto
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findBundledBazelLanguageServer()
-            ?: throwMissingLspExecutable(project, "Bazel", "bazel.lsp.executable.not.found")
+            ?: throw ExecutionException("The bundled Bazel language server executable was not found in the plugin installation.")
         return GeneralCommandLine(executable).apply {
             // bazel-lsp shells out to the `bazel` executable, so run it inside the workspace.
             project.basePath?.let { withWorkingDirectory(Path.of(it)) }
@@ -54,17 +54,14 @@ private fun isBazelLspFile(file: VirtualFile): Boolean {
 }
 
 private fun findBundledBazelLanguageServer(): String? {
-    val plugin = PluginManagerCore.getPlugin(
-        PluginId.getId("org.jetbrains.bazel-lsp-support")
-    ) ?: return null
-
     val executableName =
         if (SystemInfo.isWindows) "bazel-lsp.exe"
         else "bazel-lsp"
 
-    val executable = plugin.pluginPath
-        .resolve("bin")
-        .resolve(executableName)
+    val executable = PluginPathManager.getPluginDistPath(
+        BazelLspIntegrationProvider::class.java,
+        "bin/$executableName",
+    ) ?: return null
 
     return executable
         .takeIf { Files.isRegularFile(it) }
