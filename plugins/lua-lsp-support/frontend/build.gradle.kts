@@ -5,8 +5,8 @@ plugins {
 dependencies {
     intellijPlatform {
         bundledModule("intellij.platform.frontend")
-        bundledLibrary("lib/intellij.platform.eel.provider.jar")
-        bundledLibrary("lib/intellij.platform.lsp.jar")
-        bundledLibrary("lib/intellij.platform.lsp.impl.jar")
+        bundledModule("intellij.platform.eel.provider")
+        bundledModule("intellij.platform.lsp")
+        bundledModule("intellij.platform.lsp.impl")
     }
 }
