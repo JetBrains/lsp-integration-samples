@@ -1,0 +1,12 @@
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.bazel.BazelLspIntegrationProvider"/>
+        <fileType name="textmate" extensions="bzl;bazel;star;sky" fileNames="BUILD;WORKSPACE"/>
+    </extensions>
+</idea-plugin>

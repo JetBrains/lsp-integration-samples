@@ -20,16 +20,12 @@ plugins {
 }
 
 dependencyResolutionManagement {
-    // Configure all projects' repositories
     repositories {
         mavenCentral()
 
-        // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
         intellijPlatform {
             defaultRepositories()
         }
-        // https://github.com/cameron-martin/bazel-lsp/releases/download/v0.6.4/bazel-lsp-0.6.4-linux-amd64
-        // https://github.com/cameron-martin/bazel-lsp/releases/download/v0.6.4/bazel-lsp-0.6.4-windows-amd64.exe
 
         ivy {
             name = "releases"
@@ -47,3 +43,5 @@ dependencyResolutionManagement {
         }
     }
 }
+
+include("frontend")
