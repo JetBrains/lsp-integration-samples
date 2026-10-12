@@ -15,8 +15,8 @@ subprojects {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaUltimate("263-SNAPSHOT") {
-            useInstaller = false
+        intellijIdea("latest") {
+            useInstaller = true
         }
 
         pluginModule(implementation(project(":frontend")))
