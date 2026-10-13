@@ -16,15 +16,18 @@ import com.intellij.platform.eel.isX86_64
 import com.intellij.platform.eel.provider.LocalEelDescriptor
 import com.intellij.platform.eel.provider.asEelPath
 import com.intellij.platform.eel.provider.getEelDescriptor
+import com.intellij.platform.eel.provider.getRemoteProjectBaseNioPath
 import com.intellij.platform.eel.provider.toEelApiBlocking
 import com.intellij.platform.eel.provider.utils.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
+import com.intellij.platform.lsp.api.LspIntegrationSettings
+import com.intellij.platform.lsp.api.LspPluginServerConfiguration
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
+import com.intellij.platform.lsp.impl.createInitializationOptions
 import java.nio.file.Files
 import java.nio.file.Path
-
 
 class BazelLspIntegrationProvider : LspIntegrationProvider {
     override fun fileOpened(
@@ -32,8 +35,9 @@ class BazelLspIntegrationProvider : LspIntegrationProvider {
         file: VirtualFile,
         clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
-        if (isBazelLspFile(file)) {
-            clientStarter.ensureClientStarted(BazelLspServerDescriptor(project))
+        val descriptor = BazelLspServerDescriptor(project)
+        if (descriptor.isSupportedFile(file)) {
+            clientStarter.ensureClientStarted(descriptor)
         }
     }
 
@@ -42,25 +46,27 @@ class BazelLspIntegrationProvider : LspIntegrationProvider {
     }
 }
 
-class BazelLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "Bazel") {
-    override fun isSupportedFile(file: VirtualFile): Boolean = isBazelLspFile(file)
+class BazelLspServerDescriptor(
+    project: Project,
+    private val configuration: LspPluginServerConfiguration =
+        LspIntegrationSettings.getInstanceOrNull(project)
+            ?.getPluginConfiguration(BazelLspServerSettingsProvider.SERVER_ID)
+            ?: DEFAULT_CONFIGURATION,
+) : ProjectWideLspClientDescriptor(project, configuration.name) {
+    override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findBazelLanguageServerOnExecutionHost(project)
             ?: throw ExecutionException("The bundled Bazel language server executable was not found in the plugin installation.")
         return GeneralCommandLine(executable.asEelPath().toString()).apply {
+            addParameters(configuration.arguments)
+            configuration.environmentVariables.configureCommandLine(this)
             // bazel-lsp shells out to the `bazel` executable, so run it inside the workspace.
-            project.basePath?.let { withWorkingDirectory(Path.of(it)) }
+            project.getRemoteProjectBaseNioPath()?.let { withWorkingDirectory(it) }
         }
     }
-}
 
-private val BAZEL_FILE_EXTENSIONS = setOf("bzl", "bazel", "star", "sky")
-private val BAZEL_FILE_NAMES = setOf("BUILD", "WORKSPACE")
-
-private fun isBazelLspFile(file: VirtualFile): Boolean {
-    val extension = file.extension
-    return (extension != null && extension in BAZEL_FILE_EXTENSIONS) || file.name in BAZEL_FILE_NAMES
+    override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
 }
 
 private fun findBazelLanguageServerOnExecutionHost(project: Project): Path? {

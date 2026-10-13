@@ -8,6 +8,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.bazel.BazelLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.bazel.BazelLspServerSettingsProvider"/>
         <fileType name="textmate" extensions="bzl;bazel;star;sky" fileNames="BUILD;WORKSPACE"/>
     </extensions>
 </idea-plugin>
