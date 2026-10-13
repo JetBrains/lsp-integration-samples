@@ -3,7 +3,7 @@ import org.jetbrains.intellij.platform.gradle.tasks.BuildPluginTask
 import org.jetbrains.intellij.platform.gradle.tasks.aware.SplitModeAware
 
 group = "org.jetbrains.lsp.samples"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 plugins {
     id("org.jetbrains.intellij.platform")

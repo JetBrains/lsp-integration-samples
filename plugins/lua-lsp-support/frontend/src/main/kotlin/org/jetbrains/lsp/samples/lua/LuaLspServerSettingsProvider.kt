@@ -11,7 +11,7 @@ class LuaLspServerSettingsProvider : LspIntegrationSettingsProvider {
   override val defaultConfiguration: LspPluginServerConfiguration = DEFAULT_CONFIGURATION
 
   companion object {
-    const val SERVER_ID: String = "lua"
+    const val SERVER_ID: String = "com.intellij.experimental.lua-lsp"
   }
 }
 

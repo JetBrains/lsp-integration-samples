@@ -1,13 +1,12 @@
 <idea-plugin>
-    <id>lua.lsp</id>
+    <id>com.intellij.experimental.lua-lsp</id>
 
     <name>Lua LSP</name>
 
     <vendor url="https://jetbrains.com/">JetBrains</vendor>
 
     <description><![CDATA[
-        Provides Lua language support through the bundled LuaLS language server.
-        The complete integration is registered in the frontend module for split-mode and remote development.
+        <b>Experimental</b>. Provides Lua language support through the bundled LuaLS language server.
     ]]></description>
 
     <content>
