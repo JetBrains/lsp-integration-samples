@@ -1,6 +1,7 @@
 // Copyright 2000-2026 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 package org.jetbrains.lsp.samples.typescript
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
 import com.intellij.ide.plugins.PluginManagerCore
@@ -36,7 +37,7 @@ class TypeScriptLspServerDescriptor(project: Project) : ProjectWideLspClientDesc
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findBundledTypeScriptLanguageServer()
-            ?: throwMissingLspExecutable(project, "TypeScript", "typescript.lsp.executable.not.found")
+            ?: throw ExecutionException("The bundled TypeScript language server executable was not found in the plugin installation.")
         return GeneralCommandLine(executable, "--lsp", "--stdio")
     }
 }

@@ -32,8 +32,7 @@ A generated project contains the following content structure:
 │   └── main
 │       ├── kotlin/         Kotlin production sources
 │       └── resources/      Plugin resources
-│           ├── META-INF/   Plugin configuration file and logo
-│           └── messages/   Message bundles
+│           └── META-INF/   Plugin configuration file and logo
 ├── .gitignore              Git ignoring rules
 ├── build.gradle.kts        Gradle build configuration
 ├── gradle.properties       Gradle configuration properties

@@ -13,8 +13,6 @@
     <depends>com.intellij.modules.lsp</depends>
 <!--    <depends>com.intellij.lsp.ui</depends>-->
 
-    <resource-bundle>messages.TypeScriptLspBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.typescript.TypeScriptLspIntegrationProvider"/>
         <fileType name="textmate" extensions="ts;tsx;mts;cts;js;jsx;mjs;cjs"/>
