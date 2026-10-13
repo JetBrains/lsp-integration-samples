@@ -1,20 +1,22 @@
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.tasks.PreparePluginVariantTask
+import org.jetbrains.intellij.platform.gradle.tasks.aware.SplitModeAware
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.changelog")
     id("org.jetbrains.intellij.platform")
 }
 
+subprojects {
+    apply(plugin = "org.jetbrains.intellij.platform.module")
+}
 
 dependencies {
-    testImplementation(libs.junit)
-
     intellijPlatform {
         intellijIdeaUltimate("263-EAP-SNAPSHOT") {
             useInstaller = false
         }
+        pluginModule(implementation(project(":frontend")))
         testFramework(TestFrameworkType.Platform)
     }
 }
@@ -81,9 +83,12 @@ val layoutTypeScript = tasks.register<Sync>("layoutTypeScript") {
 }
 
 intellijPlatform {
+    splitMode = true
+    pluginInstallationTarget = SplitModeAware.PluginInstallationTarget.FRONTEND
+
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "261"
+            sinceBuild = "263"
         }
     }
     nativeVariants {

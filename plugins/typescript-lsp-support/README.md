@@ -25,12 +25,16 @@ A generated project contains the following content structure:
 ```
 .
 ├── .run/                   Predefined Run/Debug Configurations
+├── frontend/               Frontend module
+│   ├── build.gradle.kts    Module build configuration
+│   └── src/main
+│       ├── kotlin/         Kotlin production sources
+│       └── resources/      Frontend module descriptor
 ├── gradle
 │   ├── wrapper/            Gradle Wrapper
 │   ├── libs.versions.toml  Version catalog
-├── src                     Plugin sources
+├── src                     Root plugin resources
 │   └── main
-│       ├── kotlin/         Kotlin production sources
 │       └── resources/      Plugin resources
 │           └── META-INF/   Plugin configuration file and logo
 ├── .gitignore              Git ignoring rules
@@ -42,11 +46,12 @@ A generated project contains the following content structure:
 └── settings.gradle.kts     Gradle project settings
 ```
 
-In addition to the configuration files, the most crucial part is the `src` directory, which contains our implementation
-and the manifest for our plugin – [plugin.xml][file:plugin.xml].
+The `frontend` module contains the plugin implementation and its extension registrations in
+`frontend/src/main/resources/typescript-lsp-support.frontend.xml`. The root manifest,
+[plugin.xml][file:plugin.xml], declares this module as required.
 
 > [!NOTE]
-> To use Java in your plugin, create the `/src/main/java` directory.
+> To use Java in your plugin, create the `frontend/src/main/java` directory.
 
 The plugin logo is placed in `src/main/resources/META-INF/pluginIcon.svg`.
 See [Plugin Logo][docs:logo] for more information and logo requirements.
@@ -54,18 +59,19 @@ See [Plugin Logo][docs:logo] for more information and logo requirements.
 ## Build script
 
 The [build.gradle.kts][file:build.gradle.kts] is the core of the project definition.
-It applies three Gradle plugins:
+It applies the platform and changelog plugins and configures the frontend module:
 
 | Plugin                            | Description                                                                      |
 |-----------------------------------|----------------------------------------------------------------------------------|
-| `org.jetbrains.kotlin.jvm`        | Adds Kotlin support                                                              |
+| `org.jetbrains.kotlin.jvm`        | Adds Kotlin support in the frontend module                                        |
 | `org.jetbrains.changelog`         | Simplifies patching the [CHANGELOG.md][file:CHANGELOG.md] file                   |
 | `org.jetbrains.intellij.platform` | The [IntelliJ Platform Gradle Plugin][docs:intellij-platform-gradle-plugin-docs] |
+| `org.jetbrains.intellij.platform.module` | Configures the frontend module for packaging with the plugin                |
 
 The `intellijPlatform` dependencies block selects the IDE to compile against:
 
 ```kotlin
-intellijIdeaUltimate("2026.1.4")
+intellijIdeaUltimate("263-EAP-SNAPSHOT")
 ```
 
 See [Target Versions][docs:target-version] for more information.
@@ -82,7 +88,8 @@ See [Testing][docs:testing] for more information
 
 The plugin configuration file is a [plugin.xml][file:plugin.xml] file located in the `src/main/resources/META-INF`
 directory.
-It provides general information about the plugin, its dependencies, extensions, and listeners.
+It provides general information about the plugin and declares the required frontend module.
+The frontend module descriptor contains the module dependencies and extension registrations.
 
 You can read more about this file in the [Plugin Configuration File][docs:plugin.xml] section of our documentation.
 

@@ -1,0 +1,12 @@
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.typescript.TypeScriptLspIntegrationProvider"/>
+        <fileType name="textmate" extensions="ts;tsx;mts;cts;js;jsx;mjs;cjs"/>
+    </extensions>
+</idea-plugin>

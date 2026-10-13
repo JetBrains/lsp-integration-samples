@@ -10,12 +10,8 @@
         Provides TypeScript language support through the bundled native TypeScript 7 language server.
         ]]></description>
 
-    <depends>com.intellij.modules.lsp</depends>
-<!--    <depends>com.intellij.lsp.ui</depends>-->
-
-    <extensions defaultExtensionNs="com.intellij">
-        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.typescript.TypeScriptLspIntegrationProvider"/>
-        <fileType name="textmate" extensions="ts;tsx;mts;cts;js;jsx;mjs;cjs"/>
-    </extensions>
+    <content>
+        <module name="typescript-lsp-support.frontend" loading="required"/>
+    </content>
 
 </idea-plugin>
