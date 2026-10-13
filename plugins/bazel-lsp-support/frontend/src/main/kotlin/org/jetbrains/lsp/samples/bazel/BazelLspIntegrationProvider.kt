@@ -6,8 +6,18 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.util.io.NioFiles
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.platform.eel.isArm64
+import com.intellij.platform.eel.isLinux
+import com.intellij.platform.eel.isMac
+import com.intellij.platform.eel.isWindows
+import com.intellij.platform.eel.isX86_64
+import com.intellij.platform.eel.provider.LocalEelDescriptor
+import com.intellij.platform.eel.provider.asEelPath
+import com.intellij.platform.eel.provider.getEelDescriptor
+import com.intellij.platform.eel.provider.toEelApiBlocking
+import com.intellij.platform.eel.provider.utils.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
@@ -36,9 +46,9 @@ class BazelLspServerDescriptor(project: Project) : ProjectWideLspClientDescripto
     override fun isSupportedFile(file: VirtualFile): Boolean = isBazelLspFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
-        val executable = findBundledBazelLanguageServer()
+        val executable = findBazelLanguageServerOnExecutionHost(project)
             ?: throw ExecutionException("The bundled Bazel language server executable was not found in the plugin installation.")
-        return GeneralCommandLine(executable).apply {
+        return GeneralCommandLine(executable.asEelPath().toString()).apply {
             // bazel-lsp shells out to the `bazel` executable, so run it inside the workspace.
             project.basePath?.let { withWorkingDirectory(Path.of(it)) }
         }
@@ -53,17 +63,22 @@ private fun isBazelLspFile(file: VirtualFile): Boolean {
     return (extension != null && extension in BAZEL_FILE_EXTENSIONS) || file.name in BAZEL_FILE_NAMES
 }
 
-private fun findBundledBazelLanguageServer(): String? {
-    val executableName =
-        if (SystemInfo.isWindows) "bazel-lsp.exe"
-        else "bazel-lsp"
+private fun findBazelLanguageServerOnExecutionHost(project: Project): Path? {
+    val descriptor = project.getEelDescriptor()
+    val platform = descriptor.toEelApiBlocking().platform
+    val distributionPath = when {
+        descriptor is LocalEelDescriptor -> ""
+        platform.isLinux && platform.isX86_64 -> "linux-x64"
+        platform.isLinux && platform.isArm64 -> "linux-arm64"
+        platform.isMac || platform.isWindows -> ""
+        else -> return null
+    }
 
+    val executableName = if (platform.isWindows) "bazel-lsp.exe" else "bazel-lsp"
     val executable = PluginPathManager.getPluginDistPath(
         BazelLspIntegrationProvider::class.java,
-        "bin/$executableName",
-    ) ?: return null
+        distributionPath,
+    )?.resolve(executableName)?.takeIf { Files.isRegularFile(it) } ?: return null
 
-    return executable
-        .takeIf { Files.isRegularFile(it) }
-        ?.toString()
+    return findOrDeployServer(descriptor, executable).also(NioFiles::setExecutable)
 }
