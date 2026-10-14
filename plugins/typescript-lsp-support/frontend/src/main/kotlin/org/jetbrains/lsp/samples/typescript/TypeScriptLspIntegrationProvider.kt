@@ -11,8 +11,11 @@ import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
+import com.intellij.platform.lsp.api.LspIntegrationSettings
+import com.intellij.platform.lsp.api.LspPluginServerConfiguration
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
+import com.intellij.platform.lsp.impl.createInitializationOptions
 import java.nio.file.Files
 
 
@@ -22,8 +25,9 @@ class TypeScriptLspIntegrationProvider : LspIntegrationProvider {
         file: VirtualFile,
         clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
-        if (isTypeScriptLspFile(file)) {
-            clientStarter.ensureClientStarted(TypeScriptLspServerDescriptor(project))
+        val descriptor = TypeScriptLspServerDescriptor(project)
+        if (descriptor.isSupportedFile(file)) {
+            clientStarter.ensureClientStarted(descriptor)
         }
     }
 
@@ -32,19 +36,26 @@ class TypeScriptLspIntegrationProvider : LspIntegrationProvider {
     }
 }
 
-class TypeScriptLspServerDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "TypeScript") {
-    override fun isSupportedFile(file: VirtualFile): Boolean = isTypeScriptLspFile(file)
+class TypeScriptLspServerDescriptor(
+    project: Project,
+    private val configuration: LspPluginServerConfiguration =
+        LspIntegrationSettings.getInstanceOrNull(project)
+            ?.getPluginConfiguration(TypeScriptLspServerSettingsProvider.SERVER_ID)
+            ?: DEFAULT_CONFIGURATION,
+) : ProjectWideLspClientDescriptor(project, configuration.name) {
+    override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
         val executable = findBundledTypeScriptLanguageServer()
             ?: throw ExecutionException("The bundled TypeScript language server executable was not found in the plugin installation.")
-        return GeneralCommandLine(executable, "--lsp", "--stdio")
+        return GeneralCommandLine(executable).apply {
+            addParameters(configuration.arguments)
+            configuration.environmentVariables.configureCommandLine(this)
+        }
     }
+
+    override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
 }
-
-private val SUPPORTED_EXTENSIONS = setOf("ts", "tsx", "mts", "cts", "js", "jsx", "mjs", "cjs")
-
-private fun isTypeScriptLspFile(file: VirtualFile): Boolean = file.extension in SUPPORTED_EXTENSIONS
 
 private fun findBundledTypeScriptLanguageServer(): String? {
     val plugin = PluginManagerCore.getPlugin(

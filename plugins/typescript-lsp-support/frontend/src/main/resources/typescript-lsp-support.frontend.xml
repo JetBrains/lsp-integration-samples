@@ -7,6 +7,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.typescript.TypeScriptLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.typescript.TypeScriptLspServerSettingsProvider"/>
         <fileType name="textmate" extensions="ts;tsx;mts;cts;js;jsx;mjs;cjs"/>
     </extensions>
 </idea-plugin>
