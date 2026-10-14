@@ -12,8 +12,8 @@ This directory implements an IntelliJ Platform plugin that runs the native
 The server is not downloaded at runtime. The build fetches the
 `typescript-<os>-<arch>.tgz` release archives from GitHub and bundles the matching one into each
 native plugin variant, so every distribution contains a single platform's binary. The unpacked
-archive lands in the plugin's `typescript` directory, and the executable is at
-`typescript/lib/tsc` (`typescript/lib/tsc.exe` on Windows).
+archive keeps its `package` directory inside the plugin, and the executable is at
+`package/lib/tsc` (`package/lib/tsc.exe` on Windows).
 
 To move to a newer server release, change `typescriptVersion` in
 [build.gradle.kts][file:build.gradle.kts].

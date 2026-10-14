@@ -56,7 +56,7 @@ private fun findBundledTypeScriptLanguageServer(): String? {
         else "tsc"
 
     val executable = plugin.pluginPath
-        .resolve("typescript")
+        .resolve("package")
         .resolve("lib")
         .resolve(executableName)
 
