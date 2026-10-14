@@ -11,9 +11,14 @@ This directory implements an IntelliJ Platform plugin that runs the native
 
 The server is not downloaded at runtime. The build fetches the
 `typescript-<os>-<arch>.tgz` release archives from GitHub and bundles the matching one into each
-native plugin variant, so every distribution contains a single platform's binary. The unpacked
+native plugin variant. The unpacked
 archive keeps its `package` directory inside the plugin, and the executable is at
 `package/lib/tsc` (`package/lib/tsc.exe` on Windows).
+
+Every plugin archive also includes the Linux x64 and ARM64 packages under `linux-x64/package`
+and `linux-arm64/package`. The frontend selects the distribution using the project execution
+host's OS and architecture and deploys it through EEL when the host is remote. The entire
+distribution is transferred, including the declaration files in `package/lib`.
 
 To move to a newer server release, change `typescriptVersion` in
 [build.gradle.kts][file:build.gradle.kts].
@@ -71,7 +76,9 @@ It applies the platform and changelog plugins and configures the frontend module
 The `intellijPlatform` dependencies block selects the IDE to compile against:
 
 ```kotlin
-intellijIdeaUltimate("263-EAP-SNAPSHOT")
+intellijIdea("latest") {
+    useInstaller = true
+}
 ```
 
 See [Target Versions][docs:target-version] for more information.

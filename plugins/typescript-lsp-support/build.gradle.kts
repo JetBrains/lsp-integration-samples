@@ -13,8 +13,8 @@ subprojects {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaUltimate("263-EAP-SNAPSHOT") {
-            useInstaller = false
+        intellijIdea("latest") {
+            useInstaller = true
         }
         pluginModule(implementation(project(":frontend")))
         testFramework(TestFrameworkType.Platform)
@@ -37,6 +37,9 @@ fun typescriptArchive(classifier: String): FileTree {
     return tarTree(resources.gzip(archiveFile))
 }
 
+val linuxX64TypeScript = typescriptArchive("linux-x64")
+val linuxArm64TypeScript = typescriptArchive("linux-arm64")
+
 intellijPlatform {
     splitMode = true
     pluginInstallationTarget = SplitModeAware.PluginInstallationTarget.FRONTEND
@@ -50,8 +53,8 @@ intellijPlatform {
         enabled = true
 
         linux {
-            x86_64.from(typescriptArchive("linux-x64"))
-            arm64.from(typescriptArchive("linux-arm64"))
+            x86_64.from(linuxX64TypeScript)
+            arm64.from(linuxArm64TypeScript)
         }
         mac {
             x86_64.from(typescriptArchive("darwin-x64"))
@@ -65,6 +68,14 @@ intellijPlatform {
 }
 
 tasks.withType<BuildPluginTask>().configureEach {
+    // Include both Linux distributions so the frontend can deploy the matching server to the execution host.
+    from(linuxX64TypeScript) {
+        into("linux-x64")
+    }
+    from(linuxArm64TypeScript) {
+        into("linux-arm64")
+    }
+
     includeEmptyDirs = false
 
     eachFile {

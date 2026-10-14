@@ -4,11 +4,19 @@ package org.jetbrains.lsp.samples.typescript
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
-import com.intellij.ide.plugins.PluginManagerCore
-import com.intellij.openapi.extensions.PluginId
+import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.util.SystemInfo
+import com.intellij.openapi.util.io.NioFiles
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.platform.eel.isArm64
+import com.intellij.platform.eel.isLinux
+import com.intellij.platform.eel.isMac
+import com.intellij.platform.eel.isWindows
+import com.intellij.platform.eel.isX86_64
+import com.intellij.platform.eel.provider.asEelPath
+import com.intellij.platform.eel.provider.getEelDescriptor
+import com.intellij.platform.eel.provider.toEelApiBlocking
+import com.intellij.platform.eel.provider.utils.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.LspIntegrationSettings
@@ -17,7 +25,7 @@ import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import com.intellij.platform.lsp.impl.createInitializationOptions
 import java.nio.file.Files
-
+import java.nio.file.Path
 
 class TypeScriptLspIntegrationProvider : LspIntegrationProvider {
     override fun fileOpened(
@@ -46,9 +54,9 @@ class TypeScriptLspServerDescriptor(
     override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
     override fun createCommandLine(): GeneralCommandLine {
-        val executable = findBundledTypeScriptLanguageServer()
+        val executable = findTypeScriptLanguageServerOnExecutionHost(project)
             ?: throw ExecutionException("The bundled TypeScript language server executable was not found in the plugin installation.")
-        return GeneralCommandLine(executable).apply {
+        return GeneralCommandLine(executable.asEelPath().toString()).apply {
             addParameters(configuration.arguments)
             configuration.environmentVariables.configureCommandLine(this)
         }
@@ -57,21 +65,24 @@ class TypeScriptLspServerDescriptor(
     override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
 }
 
-private fun findBundledTypeScriptLanguageServer(): String? {
-    val plugin = PluginManagerCore.getPlugin(
-        PluginId.getId("org.jetbrains.typescript-lsp-support")
-    ) ?: return null
+private fun findTypeScriptLanguageServerOnExecutionHost(project: Project): Path? {
+    val descriptor = project.getEelDescriptor()
+    val platform = descriptor.toEelApiBlocking().platform
+    val distributionPath = when {
+        platform.isLinux && platform.isX86_64 -> "linux-x64"
+        platform.isLinux && platform.isArm64 -> "linux-arm64"
+        platform.isMac || platform.isWindows -> ""
+        else -> return null
+    }
 
-    val executableName =
-        if (SystemInfo.isWindows) "tsc.exe"
-        else "tsc"
-
-    val executable = plugin.pluginPath
-        .resolve("package")
-        .resolve("lib")
-        .resolve(executableName)
-
-    return executable
+    val pathToCopy = findPluginPath(distributionPath) ?: return null
+    val serverPath = findOrDeployServer(descriptor, pathToCopy)
+    return serverPath.resolve("package/lib/tsc" + if (platform.isWindows) ".exe" else "")
         .takeIf { Files.isRegularFile(it) }
-        ?.toString()
+        ?.also(NioFiles::setExecutable)
 }
+
+private fun findPluginPath(relativePath: String): Path? = PluginPathManager.getPluginDistPath(
+    TypeScriptLspIntegrationProvider::class.java,
+    relativePath,
+)
