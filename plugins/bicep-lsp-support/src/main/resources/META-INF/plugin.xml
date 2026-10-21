@@ -1,0 +1,15 @@
+<idea-plugin>
+    <id>com.intellij.experimental.bicep-lsp</id>
+    <name>Bicep LSP</name>
+    <vendor url="https://jetbrains.com/">JetBrains</vendor>
+
+    <description><![CDATA[
+        <b>Experimental</b>. Bicep language support through the Bicep language server.
+    ]]></description>
+
+    <dependencies>
+        <plugin id="com.intellij.modules.platform"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+</idea-plugin>
