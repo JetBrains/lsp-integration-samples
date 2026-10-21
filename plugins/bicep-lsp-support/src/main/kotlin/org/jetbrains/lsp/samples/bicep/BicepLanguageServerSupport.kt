@@ -1,7 +1,9 @@
 package org.jetbrains.lsp.samples.bicep
 
+import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.PluginPathManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspClient
@@ -15,9 +17,9 @@ import com.intellij.platform.lsp.api.customization.LspInlayHintCustomizer
 import com.intellij.platform.lsp.api.customization.LspInlayHintDisabled
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
 import org.jetbrains.lsp.samples.bicep.BicepBundle.BICEP_EXTENSION
-import org.jetbrains.lsp.samples.bicep.infrastructure.BicepSchedulingService
-import org.jetbrains.lsp.samples.bicep.infrastructure.LsInfrastructure
-import org.jetbrains.lsp.samples.bicep.infrastructure.LsValidity
+import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntime
+import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntimeService
+import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntimeValidity
 
 class BicepLspIntegrationProvider : LspIntegrationProvider {
   override fun fileOpened(
@@ -57,16 +59,16 @@ class BicepLspDescriptor(project: Project) : ProjectWideLspClientDescriptor(proj
 
 internal fun isLsAvailableFor(file: VirtualFile, project: Project): Boolean {
   if (file.extension != BICEP_EXTENSION) return false
-  return getComputedLsValidityOrScheduleSetup(project) == LsValidity.VALID
+  return getDotnetRuntimeValidityOrScheduleSetup(project) == DotnetRuntimeValidity.VALID
 }
 
-internal fun getComputedLsValidityOrScheduleSetup(project: Project): LsValidity {
-  val bicepService = BicepSchedulingService.getInstance(project)
-  val currentLsValidity = bicepService.currentLsInfrastructureValidity
-  if (currentLsValidity != LsValidity.VALID) {
-    bicepService.scheduleLsSetup()
+internal fun getDotnetRuntimeValidityOrScheduleSetup(project: Project): DotnetRuntimeValidity {
+  val dotnetService = DotnetRuntimeService.getInstance(project)
+  val currentValidity = dotnetService.currentValidity
+  if (currentValidity != DotnetRuntimeValidity.VALID) {
+    dotnetService.scheduleSetup()
   }
-  return currentLsValidity
+  return currentValidity
 }
 
 internal fun forceRunLanguageServer(project: Project) {
@@ -74,8 +76,12 @@ internal fun forceRunLanguageServer(project: Project) {
 }
 
 internal fun prepareBicepServerLaunchCommandLine(): GeneralCommandLine {
+  val serverPath = PluginPathManager.getPluginDistPath(
+    BicepLspDescriptor::class.java, "bicep-langserver/Bicep.LangServer.dll"
+  ) ?: throw ExecutionException("The bundled Bicep language server was not found")
+
   return GeneralCommandLine(
-    LsInfrastructure.DotnetRuntime.localExecutablePath,
-    LsInfrastructure.BicepLS.localExecutablePath
+    DotnetRuntime.localExecutablePath,
+    serverPath.toString()
   )
 }

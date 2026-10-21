@@ -25,5 +25,17 @@ dependencyResolutionManagement {
         intellijPlatform {
             defaultRepositories()
         }
+
+        ivy {
+            name = "Bicep releases"
+            setUrl("https://github.com")
+            patternLayout {
+                artifact("[organization]/bicep/releases/download/v[revision]/[artifact].[ext]")
+            }
+            metadataSources { artifact() }
+            content {
+                includeGroup("Azure")
+            }
+        }
     }
 }
