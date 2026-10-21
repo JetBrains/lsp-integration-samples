@@ -12,4 +12,12 @@
         <module name="intellij.platform.lsp"/>
         <module name="intellij.platform.lsp.impl"/>
     </dependencies>
+
+    <resource-bundle>messages.BicepBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="textmate" extensions="bicep"/>
+        <fileIconProvider implementation="org.jetbrains.lsp.samples.bicep.BicepFileIconProvider"/>
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.bicep.BicepLspIntegrationProvider"/>
+    </extensions>
 </idea-plugin>
