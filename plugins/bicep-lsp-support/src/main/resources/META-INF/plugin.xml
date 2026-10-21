@@ -19,5 +19,6 @@
         <fileType name="textmate" extensions="bicep"/>
         <fileIconProvider implementation="org.jetbrains.lsp.samples.bicep.BicepFileIconProvider"/>
         <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.bicep.BicepLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.bicep.BicepLspServerSettingsProvider"/>
     </extensions>
 </idea-plugin>

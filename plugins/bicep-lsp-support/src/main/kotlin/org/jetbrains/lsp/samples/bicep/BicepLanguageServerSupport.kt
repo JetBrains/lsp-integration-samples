@@ -9,6 +9,8 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspClient
 import com.intellij.platform.lsp.api.LspClientManager
 import com.intellij.platform.lsp.api.LspIntegrationProvider
+import com.intellij.platform.lsp.api.LspIntegrationSettings
+import com.intellij.platform.lsp.api.LspPluginServerConfiguration
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
 import com.intellij.platform.lsp.api.customization.LspCustomization
 import com.intellij.platform.lsp.api.customization.LspFormattingCustomizer
@@ -16,7 +18,7 @@ import com.intellij.platform.lsp.api.customization.LspFormattingSupport
 import com.intellij.platform.lsp.api.customization.LspInlayHintCustomizer
 import com.intellij.platform.lsp.api.customization.LspInlayHintDisabled
 import com.intellij.platform.lsp.api.lsWidget.LspClientWidgetItem
-import org.jetbrains.lsp.samples.bicep.BicepBundle.BICEP_EXTENSION
+import com.intellij.platform.lsp.impl.createInitializationOptions
 import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntime
 import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntimeService
 import org.jetbrains.lsp.samples.bicep.infrastructure.DotnetRuntimeValidity
@@ -27,8 +29,9 @@ class BicepLspIntegrationProvider : LspIntegrationProvider {
     file: VirtualFile,
     clientStarter: LspIntegrationProvider.LspClientStarter
   ) {
-    if (isLsAvailableFor(file, project)) {
-      clientStarter.ensureClientStarted(BicepLspDescriptor(project))
+    val descriptor = BicepLspDescriptor(project)
+    if (descriptor.isSupportedFile(file) && getDotnetRuntimeValidityOrScheduleSetup(project) == DotnetRuntimeValidity.VALID) {
+      clientStarter.ensureClientStarted(descriptor)
     }
   }
 
@@ -36,14 +39,23 @@ class BicepLspIntegrationProvider : LspIntegrationProvider {
     LspClientWidgetItem(lspClient, currentFile, AllIcons.Providers.Azure)
 }
 
-class BicepLspDescriptor(project: Project) : ProjectWideLspClientDescriptor(project, "Bicep LSP") {
-  override fun isSupportedFile(file: VirtualFile): Boolean {
-    return file.extension == BICEP_EXTENSION
-  }
+class BicepLspDescriptor(
+  project: Project,
+  private val configuration: LspPluginServerConfiguration =
+    LspIntegrationSettings.getInstanceOrNull(project)
+      ?.getPluginConfiguration(BicepLspServerSettingsProvider.SERVER_ID)
+      ?: DEFAULT_CONFIGURATION,
+) : ProjectWideLspClientDescriptor(project, configuration.name) {
+  override fun isSupportedFile(file: VirtualFile): Boolean = configuration.isSupportedFile(file)
 
   override fun createCommandLine(): GeneralCommandLine {
-    return prepareBicepServerLaunchCommandLine()
+    return prepareBicepServerLaunchCommandLine().apply {
+      addParameters(configuration.arguments)
+      configuration.environmentVariables.configureCommandLine(this)
+    }
   }
+
+  override fun createInitializationOptions(): Any? = configuration.createInitializationOptions()
 
   override val lspCustomization: LspCustomization = object : LspCustomization() {
     override val inlayHintCustomizer: LspInlayHintCustomizer = LspInlayHintDisabled
@@ -51,15 +63,10 @@ class BicepLspDescriptor(project: Project) : ProjectWideLspClientDescriptor(proj
       override fun shouldFormatThisFileExclusivelyByServer(file: VirtualFile,
                                                            ideCanFormatThisFileItself: Boolean,
                                                            serverExplicitlyWantsToFormatThisFile: Boolean): Boolean {
-        return file.extension == BICEP_EXTENSION
+        return isSupportedFile(file)
       }
     }
   }
-}
-
-internal fun isLsAvailableFor(file: VirtualFile, project: Project): Boolean {
-  if (file.extension != BICEP_EXTENSION) return false
-  return getDotnetRuntimeValidityOrScheduleSetup(project) == DotnetRuntimeValidity.VALID
 }
 
 internal fun getDotnetRuntimeValidityOrScheduleSetup(project: Project): DotnetRuntimeValidity {
