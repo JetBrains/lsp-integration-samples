@@ -1,0 +1,27 @@
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Azure deployment state
+*.tfstate
+*.tfstate.backup
+.azure/
+
+# Compiled ARM JSON from Bicep (build from .bicep source)
+main.json
+modules/*.json
+
+# PowerShell logs
+*.log
+
+# Secrets and env files
+.env
+*.env
+local.settings.json
