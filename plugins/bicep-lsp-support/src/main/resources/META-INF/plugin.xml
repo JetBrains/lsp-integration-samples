@@ -1,11 +1,51 @@
 <idea-plugin>
-    <id>com.intellij.experimental.bicep-lsp</id>
-    <name>Bicep LSP</name>
-    <vendor url="https://jetbrains.com/">JetBrains</vendor>
+    <id>com.intellij.bicep</id>
+    <name>Bicep</name>
+    <vendor>JetBrains</vendor>
 
     <description><![CDATA[
-        <b>Experimental</b>. Bicep language support through the Bicep language server.
+    Provides <a href="https://github.com/Azure/bicep">Bicep</a> language support.
+    <p>Features:</p>
+    <ul>
+      <li>Syntax highlighting</li>
+      <li>LSP-based resolve and completion</li>
+    </ul>
+
+    <h3>What is Bicep?</h3>
+    Bicep is a Domain Specific Language (DSL) for deploying Azure resources declaratively.
+    It aims to drastically simplify the authoring experience with a cleaner syntax, improved type safety, and better support for modularity and code re-use.
+    Bicep is a transparent abstraction over ARM and ARM templates, which means anything that can be done in an ARM Template can be done in Bicep.
+    All resource types, apiVersions, and properties that are valid in an ARM template are equally valid in Bicep on day one
+    (Note: even if Bicep warns that type information is not available for a resource, it can still be deployed).
+
+    Bicep code is transpiled to standard ARM Template JSON files, which effectively treats the ARM Template as an Intermediate Language (IL).
+
+    <h3>Goals</h3>
+    <li>Build the best possible language for describing, validating, and deploying infrastructure to Azure.</li>
+    <li>The language should provide a transparent abstraction for the underlying platform. There must be no "onboarding step" to enable Bicep support for a new resource type and/or api version.</li>
+    <li>Code should be easy to understand at a glance and straightforward to learn, regardless of your experience with other programming languages.</li>
+    <li>Users should be given a lot of freedom to modularize and re-use their code. Code re-use should not require any 'copy/paste'-ing.</li>
+    <li>Tooling should provide a high level of resource discoverability and validation, and should be developed alongside the compiler rather than added at the end.</li>
+    <li>Users should have a high level of confidence that their code is 'syntactically valid' before deploying.</li>
+
+    <h3>Non-goals</h3>
+    <li>Build a general purpose language to meet any need. This will not replace general purpose languages and you may still need to do pre or post-Bicep execution tasks in a script or high-level programming language.</li>
+    <li>Provide a first-class provider model for non-Azure related tasks. While we will likely introduce an extensibility model at some point, any extension points are intended to be focused on Azure infra or application deployment related tasks.</li>
+
+    <h3>How does Bicep work?</h3>
+    Both Az CLI (2.20.0+) and the PowerShell Az module (v5.6.0+) have Bicep support built-in.
+    This means you can use the standard deployment commands with your *.bicep files and the tooling will transpile the code and send it to ARM on your behalf.
+    For example, to deploy main.bicep to a resource group my-rg, we can use the CLI command we are already used to:
+    <code>az deployment group create -f ./main.bicep -g my-rg</code>
+    For more detail on taking advantage of new Bicep constructs that replace an equivalent from ARM Templates, you can read the <a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/compare-template-syntax">moving from ARM => Bicep doc</a>.
     ]]></description>
+
+    <change-notes><![CDATA[
+    2023.3
+    <ul>
+      <li>Release of a plugin with syntax highlighting and basic functionality based on LSP for all IntelliJ-based IDEs.</li>
+    </ul>
+    ]]></change-notes>
 
     <dependencies>
         <plugin id="com.intellij.modules.platform"/>

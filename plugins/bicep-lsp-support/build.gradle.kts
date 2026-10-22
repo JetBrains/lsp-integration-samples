@@ -5,7 +5,7 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-version = "1.0.0"
+version = "263.7031.20"
 
 dependencies {
     intellijPlatform {
