@@ -1,0 +1,14 @@
+<idea-plugin>
+    <!-- TODO: Set a unique plugin ID. -->
+    <id>lsp.plugin.template</id>
+    <!-- TODO: Add your plugin name, vendor, and description. -->
+    <name>Your Language LSP</name>
+    <vendor>Your name</vendor>
+    <description><![CDATA[
+        TODO: Describe your language support and how to install its language server.
+    ]]></description>
+
+    <content>
+        <module name="template.lsp.frontend" loading="required"/>
+    </content>
+</idea-plugin>

@@ -1,0 +1,16 @@
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- TODO: Update these class names after renaming the Kotlin package and classes. -->
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.template.TemplateLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.template.TemplateLspServerSettingsProvider"/>
+        <!-- TODO: Register file types if the IDE does not already recognize your language, for example:
+        <fileType name="textmate" extensions="your-extension"/>
+        -->
+    </extensions>
+</idea-plugin>
