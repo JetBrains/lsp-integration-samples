@@ -17,10 +17,8 @@ class TemplateLspIntegrationProvider : LspIntegrationProvider {
         file: VirtualFile,
         clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
-        val descriptor = TemplateLspServerDescriptor(project)
-        if (descriptor.isSupportedFile(file)) {
-            clientStarter.ensureClientStarted(descriptor)
-        }
+        // TODO: Check whether the opened file is supported, then call
+        // clientStarter.ensureClientStarted with your server descriptor.
     }
 }
 
