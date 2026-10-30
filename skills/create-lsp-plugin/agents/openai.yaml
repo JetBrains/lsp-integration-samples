@@ -1,0 +1,3 @@
+interface:
+  display_name: "Create LSP Plugin"
+  short_description: "Create IntelliJ language plugins from the LSP template"
