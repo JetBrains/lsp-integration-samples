@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.jetbrains.lsp.samples.swift"
-version = "0.0.1"
+version = "1.0.0"
 
 dependencies {
     intellijPlatform {
@@ -13,6 +13,7 @@ dependencies {
             useInstaller = true
         }
         pluginModule(implementation(project(":frontend")))
+        pluginVerifier()
     }
 }
 
@@ -23,6 +24,12 @@ intellijPlatform {
     pluginConfiguration {
         ideaVersion {
             sinceBuild = "263"
+        }
+    }
+
+    pluginVerification {
+        ides {
+            current()
         }
     }
 }

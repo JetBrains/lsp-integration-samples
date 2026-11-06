@@ -8,7 +8,7 @@ are supplied by SourceKit-LSP. The target IDE's bundled TextMate Swift grammar
 provides syntax highlighting independently of this plugin.
 
 Plugin ID: `swift.lsp.support`. Server ID: `swift-sourcekit-lsp`.
-Initial version: `0.0.1`.
+Initial Marketplace version: `1.0.0`.
 
 ## Existing toolchain and discovery
 
@@ -84,11 +84,14 @@ From this directory, with `JAVA_HOME` pointing to JDK 25:
 
 ```shell
 ./gradlew buildPlugin verifyPluginStructure :frontend:test
+./gradlew verifyPluginProjectConfiguration :frontend:verifyPluginProjectConfiguration verifyPlugin
 ./gradlew runIde
 ./gradlew runIdeSplitMode
 ```
 
-Use `gradlew.bat` on Windows. Install `build/distributions/swift-lsp-support-0.0.1.zip`
+`verifyPlugin` checks binary compatibility against the pinned IDEA build above.
+
+Use `gradlew.bat` on Windows. Install `build/distributions/swift-lsp-support-1.0.0.zip`
 through **Settings | Plugins | Install Plugin from Disk** in a compatible test IDE.
 The same ZIP contains no native binaries and is intended for Windows, macOS, and
 Linux with a working toolchain. Split mode resolves the server on the project host.
@@ -129,3 +132,11 @@ SourceKit-LSP from the package root and from an unrelated directory produced the
 successful initialization, local-target dependency resolution, package compiler settings,
 type-error diagnostics, corrected diagnostics, hover, and shutdown. Both runs received
 the package URI in LSP initialization. This was a direct server check on macOS.
+
+Verified on 2026-11-06 for Marketplace version `1.0.0`: the plugin build, archive
+structure, and root/frontend project configuration checks passed; all 16 resolver
+tests are passing. Plugin Verifier 1.411 reported compatibility with IDEA
+263.7031.23, with 57 experimental LSP/Eel API usages and no compatibility errors.
+The ZIP contains the release version, minimum platform build `263`, vendor URL,
+description, release notes, Swift icon, and required frontend module. This check
+does not add interactive IDE or split-mode smoke-test coverage.

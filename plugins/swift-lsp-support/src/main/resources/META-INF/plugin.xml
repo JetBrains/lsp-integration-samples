@@ -1,14 +1,22 @@
 <idea-plugin>
     <id>swift.lsp.support</id>
-    <name>Swift LSP Support</name>
-    <vendor>JetBrains</vendor>
+    <name>Swift LSP</name>
+    <vendor url="https://jetbrains.com/">JetBrains</vendor>
     <description><![CDATA[
-        Swift language support through SourceKit-LSP from an existing Swift toolchain.
-        Finds the toolchain on PATH or in common Windows installation locations.
-        Set SWIFT_TOOLCHAIN in Language Servers &gt; Swift (SourceKit-LSP) &gt; Environment variables
-        to select a toolchain explicitly. Swift and SourceKit-LSP are never downloaded or installed.
-        Requires a complete user-installed Swift toolchain, including its platform SDK and runtime.
+        <p><b>Experimental</b>. Provides Swift language support through
+        <a href="https://github.com/swiftlang/sourcekit-lsp">SourceKit-LSP</a>
+        from an existing Swift toolchain, including code completion, diagnostics, hover, and navigation.</p>
+        <p>Requires a complete user-installed Swift toolchain with both <code>swift</code> and
+        <code>sourcekit-lsp</code>, including its platform SDK and runtime, on the project execution host.
+        Swift and SourceKit-LSP are never downloaded or installed by this plugin.</p>
+        <p>Finds the toolchain on <code>PATH</code> or in common Windows installation locations.
+        To select a toolchain explicitly, set <code>SWIFT_TOOLCHAIN</code> in
+        <b>Settings | Languages &amp; Frameworks | Language Servers | Swift (SourceKit-LSP) | Environment variables</b>.</p>
     ]]></description>
+    <change-notes><![CDATA[
+        Initial experimental release with SourceKit-LSP integration for Swift files,
+        automatic toolchain discovery, and configurable toolchain selection.
+    ]]></change-notes>
 
     <content>
         <module name="swift-lsp-support.frontend" loading="required"/>
