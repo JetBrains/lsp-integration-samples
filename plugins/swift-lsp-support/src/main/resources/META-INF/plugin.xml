@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>swift.lsp.support</id>
+    <id>com.intellij.experimental.swift-lsp</id>
     <name>Swift LSP</name>
     <vendor url="https://jetbrains.com/">JetBrains</vendor>
     <description><![CDATA[
