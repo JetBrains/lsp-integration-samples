@@ -41,6 +41,12 @@
     ]]></description>
 
     <change-notes><![CDATA[
+    2026.3
+    <ul>
+      <li>Improved language server startup with bundled Bicep 0.48.1 and automatic setup of the required .NET runtime.</li>
+      <li>Added support for custom file patterns, arguments, environment variables, and initialization options in LSP settings.</li>
+    </ul>
+
     2023.3
     <ul>
       <li>Release of a plugin with syntax highlighting and basic functionality based on LSP for all IntelliJ-based IDEs.</li>

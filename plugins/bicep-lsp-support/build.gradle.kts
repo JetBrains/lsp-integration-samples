@@ -5,15 +5,16 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-version = "263.7031.20"
+version = "263.7307.102"
 
 dependencies {
     intellijPlatform {
-        intellijIdea("latest") {
+        intellijIdea("2026.3") {
             useInstaller = true
         }
         bundledModule("intellij.platform.lsp")
         bundledModule("intellij.platform.lsp.impl")
+        pluginVerifier()
     }
 }
 
@@ -36,7 +37,13 @@ tasks.withType<PrepareSandboxTask>().configureEach {
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "263"
+            sinceBuild = "263.7307"
+        }
+    }
+
+    pluginVerification {
+        ides {
+            current()
         }
     }
 }
