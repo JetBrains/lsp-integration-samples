@@ -1,0 +1,13 @@
+<idea-plugin>
+    <dependencies>
+        <module name="intellij.platform.frontend"/>
+        <module name="intellij.platform.eel.provider"/>
+        <module name="intellij.platform.lsp"/>
+        <module name="intellij.platform.lsp.impl"/>
+    </dependencies>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="org.jetbrains.lsp.samples.swift.SwiftLspIntegrationProvider"/>
+        <platform.lsp.serverSettingsProvider implementation="org.jetbrains.lsp.samples.swift.SwiftLspServerSettingsProvider"/>
+    </extensions>
+</idea-plugin>

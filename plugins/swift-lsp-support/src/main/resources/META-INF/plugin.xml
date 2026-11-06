@@ -1,0 +1,16 @@
+<idea-plugin>
+    <id>swift.lsp.support</id>
+    <name>Swift LSP Support</name>
+    <vendor>JetBrains</vendor>
+    <description><![CDATA[
+        Swift language support through SourceKit-LSP from an existing Swift toolchain.
+        Finds the toolchain on PATH or in common Windows installation locations.
+        Set SWIFT_TOOLCHAIN in Language Servers &gt; Swift (SourceKit-LSP) &gt; Environment variables
+        to select a toolchain explicitly. Swift and SourceKit-LSP are never downloaded or installed.
+        Requires a complete user-installed Swift toolchain, including its platform SDK and runtime.
+    ]]></description>
+
+    <content>
+        <module name="swift-lsp-support.frontend" loading="required"/>
+    </content>
+</idea-plugin>
