@@ -9,7 +9,7 @@ version = "1.0.0"
 
 dependencies {
     intellijPlatform {
-        intellijIdea("263.7031.23") {
+        intellijIdea("2026.3") {
             useInstaller = true
         }
         pluginModule(implementation(project(":frontend")))
@@ -23,7 +23,7 @@ intellijPlatform {
 
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "263"
+            sinceBuild = "263.7307"
         }
     }
 

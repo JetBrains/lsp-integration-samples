@@ -6,7 +6,7 @@ IDEA for Swift files, including `Package.swift`. The integration lives in the
 
 ## Requirements and setup
 
-- IntelliJ IDEA 2026.3 or newer (platform build 263+).
+- IntelliJ IDEA 2026.3 or newer (platform build 263.7307+).
 - A Swift toolchain containing both `swift` and `sourcekit-lsp` on the project
   execution host. The plugin does not install Swift or its SDKs.
 
