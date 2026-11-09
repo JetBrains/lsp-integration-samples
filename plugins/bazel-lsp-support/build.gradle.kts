@@ -7,19 +7,18 @@ plugins {
     id("org.jetbrains.intellij.platform")
 }
 
-version = "1.0.1"
-
 subprojects {
     apply(plugin = "org.jetbrains.intellij.platform.module")
 }
 
 dependencies {
     intellijPlatform {
-        intellijIdea("latest") {
+        intellijIdea("2026.3") {
             useInstaller = true
         }
         pluginModule(implementation(project(":frontend")))
         testFramework(TestFrameworkType.Platform)
+        pluginVerifier()
     }
 }
 
@@ -54,9 +53,16 @@ intellijPlatform {
 
     pluginConfiguration {
         ideaVersion {
-            sinceBuild = "263"
+            sinceBuild = "263.7307"
         }
     }
+
+    pluginVerification {
+        ides {
+            current()
+        }
+    }
+
     nativeVariants {
         enabled = true
 

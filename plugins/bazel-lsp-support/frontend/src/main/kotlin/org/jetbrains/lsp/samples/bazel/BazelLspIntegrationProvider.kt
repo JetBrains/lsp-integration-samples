@@ -16,7 +16,6 @@ import com.intellij.platform.eel.isX86_64
 import com.intellij.platform.eel.provider.LocalEelDescriptor
 import com.intellij.platform.eel.provider.asEelPath
 import com.intellij.platform.eel.provider.getEelDescriptor
-import com.intellij.platform.eel.provider.getRemoteProjectBaseNioPath
 import com.intellij.platform.eel.provider.toEelApiBlocking
 import com.intellij.platform.eel.provider.utils.EelServerDeploymentUtils.findOrDeployServer
 import com.intellij.platform.lsp.api.LspClient
@@ -61,8 +60,6 @@ class BazelLspServerDescriptor(
         return GeneralCommandLine(executable.asEelPath().toString()).apply {
             addParameters(configuration.arguments)
             configuration.environmentVariables.configureCommandLine(this)
-            // bazel-lsp shells out to the `bazel` executable, so run it inside the workspace.
-            project.getRemoteProjectBaseNioPath()?.let { withWorkingDirectory(it) }
         }
     }
 
