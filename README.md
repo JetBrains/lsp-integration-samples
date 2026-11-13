@@ -1,79 +1,62 @@
 # LSP Integration Samples
 
-This repository contains examples for LSP integration in IntelliJ IDEA:
+This repository provides a [plugin template](lsp-plugin-template) and a
+[`create-lsp-plugin` Codex skill](skills/create-lsp-plugin/SKILL.md) for creating
+IntelliJ Platform plugins based on the Language Server Protocol (LSP).
+It also contains [plugin implementations](#plugin-examples) to use as examples
+and [sample projects](samples) for testing.
 
-- `samples/` — sample projects for integration and performance testing.
-- `plugins/` — IntelliJ Platform plugin examples for LSP servers.
+## Use the template
 
-## Samples
+The template includes LSP integration, the platform's settings UI, and support for
+regular IDEs and split mode (remote development).
 
-Sample projects for integration and performance testing:
+1. Copy [`lsp-plugin-template/`](lsp-plugin-template) into your own project directory
+   and open it as a Gradle project with JDK 21.
+2. Follow the [customization instructions](lsp-plugin-template/README.md#customize)
+   to set your plugin metadata, supply a language server, and complete the TODOs.
+3. Run `./gradlew buildPlugin` to build the plugin or `./gradlew runIde` to try it.
 
-| Language | Project | Source |
-| --- | --- | --- |
-| Lua | [`samples/lua/inspect.lua`](samples/lua/inspect.lua) | [kikito/inspect.lua](https://github.com/kikito/inspect.lua) |
-| Lua | [`samples/lua/luarocks`](samples/lua/luarocks) | [luarocks/luarocks](https://github.com/luarocks/luarocks) |
-| Dart | [`samples/dart/equatable`](samples/dart/equatable) | [felangel/equatable](https://github.com/felangel/equatable) |
-| Swift | [`samples/swift/swift-tagged`](samples/swift/swift-tagged) | [pointfreeco/swift-tagged](https://github.com/pointfreeco/swift-tagged) |
-| TypeScript / React | [`samples/typescript-react`](samples/typescript-react) | In-repository sample |
+See the [template README](lsp-plugin-template/README.md) for IDE compatibility and
+split-mode run instructions.
 
-The TypeScript / React sample uses TypeScript 7, Vite, Tailwind CSS, and TanStack Router.
+## Use the skill with Codex
 
-## Plugins
+The skill guides Codex through creating a plugin from the template, setting up the
+server and its runtime, building the plugin, and verifying it in an IDE.
 
-### Lua LSP support
+Ask Codex to install it:
 
-[`plugins/lua-lsp-support`](plugins/lua-lsp-support) is an IntelliJ Platform
-plugin that integrates the [LuaLS language server](https://github.com/LuaLS/lua-language-server)
-with IntelliJ IDEA.
+```text
+Use $skill-installer to install the skill at
+https://github.com/JetBrains/lsp-integration-samples/tree/main/skills/create-lsp-plugin
+```
 
-### Bazel LSP support
+Then ask Codex in your destination workspace:
 
-[`plugins/bazel-lsp-support`](plugins/bazel-lsp-support) is an IntelliJ Platform
-plugin that integrates the [bazel-lsp language server](https://github.com/cameron-martin/bazel-lsp)
-with IntelliJ IDEA. It handles `BUILD`, `WORKSPACE`, `*.bazel`, `*.bzl`,
-`*.star`, and `*.sky` files, and requires the `bazel` executable on the `PATH`.
+```text
+Use $create-lsp-plugin to create an IntelliJ plugin for <language> in <directory>.
+Use <language server>. Help me choose how to supply the server and its runtime.
+```
 
-### TypeScript LSP support
+Your plugin project can live outside this repository; the skill obtains the
+template and examples as needed.
 
-[`plugins/typescript-lsp-support`](plugins/typescript-lsp-support) is an IntelliJ Platform
-plugin that integrates the native [TypeScript language server](https://github.com/microsoft/TypeScript)
-with IntelliJ IDEA.
+## Plugin examples
 
-### Tailwind CSS LSP support
+Use these implementations as references for connecting a language server,
+supplying its runtime, and configuring a plugin:
 
-[`plugins/tailwind-lsp-support`](plugins/tailwind-lsp-support) is an IntelliJ Platform
-plugin that integrates the [Tailwind CSS language server](https://github.com/tailwindlabs/tailwindcss-intellisense)
-with IntelliJ IDEA. The npm package ships two servers, and the plugin registers a client
-for each: the Tailwind one for `css`, `scss`, `less`, `html`, `js`, `jsx`, `ts`, and `tsx`
-files, and the CSS one for `css`, `scss`, and `less`. The package is bundled at build time;
-it is a platform-independent JS bundle, started with `npx` from the IDE's managed Node.js
-runtime, which the plugin downloads on demand.
+| Plugin | Language server |
+| --- | --- |
+| [Lua](plugins/lua-lsp-support) | [LuaLS](https://github.com/LuaLS/lua-language-server) |
+| [Bazel](plugins/bazel-lsp-support) | [bazel-lsp](https://github.com/cameron-martin/bazel-lsp) |
+| [Bicep](plugins/bicep-lsp-support) | [Bicep](https://github.com/Azure/bicep) |
+| [TypeScript](plugins/typescript-lsp-support) | [Native TypeScript](https://github.com/microsoft/TypeScript) |
+| [Tailwind CSS](plugins/tailwind-lsp-support) | [Tailwind CSS IntelliSense](https://github.com/tailwindlabs/tailwindcss-intellisense) |
+| [Swift](plugins/swift-lsp-support) | [SourceKit-LSP](https://github.com/swiftlang/sourcekit-lsp) |
 
-### Download a plugin build
+## Sample projects
 
-Each plugin has a workflow that uploads installable plugin ZIPs as GitHub
-Actions artifacts:
-
-- [Build Lua LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-lua-plugin.yml)
-- [Build Bazel LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-bazel-plugin.yml)
-- [Build TypeScript LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-typescript-plugin.yml)
-- [Build Tailwind CSS LSP plugin](https://github.com/JetBrains/lsp-integration-samples/actions/workflows/build-tailwind-plugin.yml)
-
-Open a successful workflow run and download the artifact for your platform:
-
-| Platform | Lua artifact | Bazel artifact | TypeScript artifact |
-| --- | --- | --- | --- |
-| Linux ARM64 | `lua-lsp-linux-arm64` | `bazel-lsp-linux-arm64` | `typescript-lsp-linux-arm64` |
-| Linux x86_64 | `lua-lsp-linux-x86_64` | `bazel-lsp-linux-x86_64` | `typescript-lsp-linux-x86_64` |
-| macOS ARM64 | `lua-lsp-mac-arm64` | `bazel-lsp-mac-arm64` | `typescript-lsp-mac-arm64` |
-| macOS x86_64 | `lua-lsp-mac-x86_64` | `bazel-lsp-mac-x86_64` | `typescript-lsp-mac-x86_64` |
-| Windows ARM64 | — | — | `typescript-lsp-windows-arm64` |
-| Windows x86_64 | `lua-lsp-windows-x86_64` | `bazel-lsp-windows-x86_64` | `typescript-lsp-windows-x86_64` |
-
-The Tailwind CSS plugin's server is platform-independent, so its workflow uploads a
-single `tailwind-lsp` artifact that works on every platform.
-
-After downloading and extracting the artifact, install the plugin from the
-ZIP file using **Settings | Plugins | ⚙ | Install Plugin from Disk** in
-IntelliJ IDEA.
+[`samples/`](samples) contains projects for trying the plugins and testing LSP
+integration and performance.
